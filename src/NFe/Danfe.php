@@ -64,6 +64,12 @@ class Danfe extends DaCommon
      * @var boolean
      */
     protected $descProdQuebraLinha = true;
+     /**
+     * Parâmetro para ocultar a unidade tributável nos itens
+     *
+     * @var boolean
+     */
+    protected $ocultarUnidadeTributavel = false;
     /**
      * XML NFe
      *
@@ -260,6 +266,14 @@ class Danfe extends DaCommon
      * @var integer
      */
     protected $qComCasasDec = 4;
+    /**
+     * Atribui se a unidade tributável deve sempre ocultada nos itens.
+     * @param bool $ocultarUnidadeTributavel
+     */
+    public function setOcultarUnidadeTributavel($ocultarUnidadeTributavel = false)
+    {
+        $this->ocultarUnidadeTributavel = filter_var($ocultarUnidadeTributavel, FILTER_VALIDATE_BOOLEAN);
+    }
     /**
      * Número de casas decimais para o valor da unidade comercial.
      *
@@ -585,7 +599,8 @@ class Danfe extends DaCommon
             //se as unidades forem diferentes e q qtda de qTrib for maior que 0
             //mostrat as unidades
             $mostrarUnidadeTributavel = (
-                !empty($uTrib)
+                !$this->ocultarUnidadeTributavel
+                && !empty($uTrib)
                 && !empty($qTrib)
                 && number_format($vUnCom, 2, ',', '') !== number_format($vUnTrib, 2, ',', '')
             );
@@ -2664,7 +2679,7 @@ class Danfe extends DaCommon
                 $dVal = $this->getTagDate($rastro->item($i), 'dVal');
                 $dt = \DateTime::createFromFormat('Y-m-d', $dVal);
                 $dataval = " Val: " . $dt->format('m/Y');
-                
+
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'nLote', ' Lote: ');
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'qLote', ' Quant: ');
                 $loteTxt .= $datafab; //$this->getTagDate($rastro->item($i), 'dFab', ' Fab: ');
@@ -2879,7 +2894,8 @@ class Danfe extends DaCommon
                 //   utilizada uma das linhas adicionais previstas, ou o campo de informações adicionais."
                 // > Manual Integração - Contribuinte 4.01 - NT2009.006, Item 7.1.5, página 91.
                 $mostrarUnidadeTributavel = (
-                    !empty($uTrib)
+                    !$this->ocultarUnidadeTributavel
+                    && !empty($uTrib)
                     && !empty($qTrib)
                     && number_format($vUnCom, 2, ',', '') !== number_format($vUnTrib, 2, ',', '')
                 );
