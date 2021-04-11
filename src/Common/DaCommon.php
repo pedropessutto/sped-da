@@ -68,7 +68,7 @@ class DaCommon extends Common
     /**
      * @var string
      */
-    protected $fontePadrao = 'times';
+    protected $fontePadrao = 'helvetica';
     /**
      * @var array
      */
