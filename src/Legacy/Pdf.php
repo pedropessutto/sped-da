@@ -331,7 +331,7 @@ class Pdf extends Fpdf
         }
         $this->out($op);
     }
-    
+
     /**
      * Desenha o arco para arredondar o canto do retangulo
      * @param   number $x1
@@ -356,7 +356,7 @@ class Pdf extends Fpdf
             )
         );
     }
-    
+
     /**
      * Desenha um retangulo com linhas tracejadas
      * @param   number $x1
@@ -425,7 +425,7 @@ class Pdf extends Fpdf
             $this->rect($xi, $yi, $w, $h);
         }
     }
-    
+
     /**
      * Insere linhas de texto na caixa
      * @param   number  $w
@@ -561,7 +561,7 @@ class Pdf extends Fpdf
         $this->x = $this->lMargin;
         return $nl;
     }
-    
+
     /**
      * Quebra o texto para caber na caixa
      * @param   type $text
@@ -611,7 +611,7 @@ class Pdf extends Fpdf
         $text = rtrim($text);
         return $count;
     }
-    
+
     /**
      * Celula com escala horizontal caso o texto seja muito largo
      * @param   number  $w
@@ -721,7 +721,7 @@ class Pdf extends Fpdf
     {
         $this->cellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, false, false);
     }
-    
+
     /**
      * Celula com espaçamento de caracteres forçado
      * @param   number  $w
@@ -745,7 +745,7 @@ class Pdf extends Fpdf
     ) {
         $this->cellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, false, true);
     }
-    
+
     /**
      * Patch para trabalhar com textos de duplo byte CJK
      * @param   string $s
@@ -817,7 +817,7 @@ class Pdf extends Fpdf
             $n--;
         }
     }
-    
+
     /**
      * pGetNumLines
      * Obtem o numero de linhas usadas pelo texto usando a fonte especifidada
@@ -833,7 +833,7 @@ class Pdf extends Fpdf
         $n = $this->wordWrap($text, $width - 0.2);
         return $n;
     }
-    
+
     /**
      * pTextBox
      * Cria uma caixa de texto com ou sem bordas. Esta função perimite o alinhamento horizontal
@@ -896,7 +896,7 @@ class Pdf extends Fpdf
         }
         //desenhar a borda da caixa
         if ($border) {
-            $this->roundedRect($x, $y, $w, $h, 0.8, '1234', 'D');
+            $this->roundedRect($x, $y, $w, $h, 0, '1234', 'D');
         }
         //estabelecer o fonte
         $this->setFont($aFont['font'], $aFont['style'], $aFont['size']);
@@ -970,7 +970,7 @@ class Pdf extends Fpdf
         }
         return ($y1 - $y) - $incY;
     }
-    
+
     /**
      * Cria uma caixa de texto com ou sem bordas. Esta função permite o alinhamento horizontal
      * ou vertical do texto dentro da caixa, rotacionando-o em 90 graus, essa função precisa que
