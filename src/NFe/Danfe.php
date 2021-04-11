@@ -2674,11 +2674,9 @@ class Danfe extends DaCommon
             $i      = 0;
             while ($i < $rastro->length) {
                 $dFab = $this->getTagDate($rastro->item($i), 'dFab');
-                $dt = \DateTime::createFromFormat('Y-m-d', $dFab);
-                $datafab = " Fab: " . $dt->format('d/m/Y');
+                $datafab = " Fab: " . $dFab;
                 $dVal = $this->getTagDate($rastro->item($i), 'dVal');
-                $dt = \DateTime::createFromFormat('Y-m-d', $dVal);
-                $dataval = " Val: " . $dt->format('m/Y');
+                $dataval = " Val: " . $dVal;
 
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'nLote', ' Lote: ');
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'qLote', ' Quant: ');
