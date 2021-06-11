@@ -338,6 +338,15 @@ class Danfe extends DaCommon
         $this->qComCasasDec = $qComCasasDec;
     }
 
+    /**
+     * Atribui se a unidade tributável deve sempre ocultada nos itens.
+     * @param bool $ocultarUnidadeTributavel
+     */
+    public function setOcultarUnidadeTributavel($ocultarUnidadeTributavel = false)
+    {
+        $this->ocultarUnidadeTributavel = filter_var($ocultarUnidadeTributavel, FILTER_VALIDATE_BOOLEAN);
+    }
+
     protected function calculoEspacoVericalDadosAdicionais()
     {
         $this->textoAdic = '';
@@ -411,7 +420,6 @@ class Danfe extends DaCommon
                 $numlinhasdados         = $this->pdf->getNumLines($this->textoAdic, $this->wAdic, $fontProduto) + 3;
                 $this->textadicfontsize = $this->pdf->fontSize;
                 $hdadosadic             = ceil($numlinhasdados * $this->textadicfontsize);
-                echo $hdadosadic;
                 if ($hdadosadic <= 90) {
                     $hdadosadic = ceil($hdadosadic);
                     break;
@@ -3209,7 +3217,7 @@ class Danfe extends DaCommon
         $veiculoTipo       = $veicProd->getElementsByTagName("tpVeic")->item(0)->nodeValue;
 
         $veiculoMotor       = $veicProd->getElementsByTagName("nMotor")->item(0)->nodeValue;
-        $veiculoRenavam     = $veicProd->getElementsByTagName("cMod")->item(0)->nodeValue;
+        $veiculoCodigoModelo     = $veicProd->getElementsByTagName("cMod")->item(0)->nodeValue;
         $veiculoHp          = $veicProd->getElementsByTagName("pot")->item(0)->nodeValue;
         $veiculoPlaca       = ''; //$veiculo->getElementsByTagName("CMT")->item(0)->nodeValue;
         $veiculoTipoPintura = $veicProd->getElementsByTagName("tpPint")->item(0)->nodeValue;
@@ -3243,7 +3251,7 @@ class Danfe extends DaCommon
         $texto = 'Nº Motor: .........: ' . $veiculoMotor;
         $this->pdf->textBox($xVeic, $yVeic, $w1 + 50, $h, $texto, $aFont, 'T', 'L', 0, '');
         $yVeic += $h;
-        $texto = 'Renavam...........: ' . $veiculoRenavam;
+        $texto = 'Código Modelo ....: ' . $veiculoCodigoModelo;
         $this->pdf->textBox($xVeic, $yVeic, $w1 + 50, $h, $texto, $aFont, 'T', 'L', 0, '');
         $yVeic += $h;
         $texto = 'HP.....................: ' . $veiculoHp;
@@ -3393,10 +3401,6 @@ class Danfe extends DaCommon
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
         //o texto com os dados adicionais foi obtido na função montaDANFE
         //e carregado em uma propriedade privada da classe
-        //$this->wAdic com a largura do campo
-        //$this->textoAdic com o texto completo do campo
-        //echo str_replace("\n", "<br>",$this->textoAdic);
-        //die;
         $y     += 1;
         $aFont = ['font' => $this->fontePadrao, 'size' => $this->textadicfontsize * $this->pdf->k, 'style' => ''];
         //$aFont = ['font'=>$this->fontePadrao, 'size'=> 5, 'style'=>''];
