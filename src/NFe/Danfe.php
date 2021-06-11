@@ -338,15 +338,6 @@ class Danfe extends DaCommon
         $this->qComCasasDec = $qComCasasDec;
     }
 
-    /**
-     * Atribui se a unidade tributável deve sempre ocultada nos itens.
-     * @param bool $ocultarUnidadeTributavel
-     */
-    public function setOcultarUnidadeTributavel($ocultarUnidadeTributavel = false)
-    {
-        $this->ocultarUnidadeTributavel = filter_var($ocultarUnidadeTributavel, FILTER_VALIDATE_BOOLEAN);
-    }
-
     protected function calculoEspacoVericalDadosAdicionais()
     {
         $this->textoAdic = '';
