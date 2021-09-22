@@ -3711,9 +3711,9 @@ class Danfe extends DaCommon
         if (0 === $nfRefs->length) {
             return $saida;
         }
-        if ($nfRefs->length > 2) {
+        /*if ($nfRefs->length > 2) {
             return 'Existem mais de 2 NF/NFe/ECF/NFP/CTe referenciadas, não serão exibidas na DANFE.';
-        }
+        }*/
         foreach ($nfRefs as $nfRef) {
             if (empty($nfRef)) {
                 continue;
