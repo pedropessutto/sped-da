@@ -44,7 +44,7 @@ class Danfe extends DaCommon
      *
      * @var boolean
      */
-    protected $exibirTextoFatura = false;
+    protected $exibirTextoFatura = true;
     /**
      * Parâmetro do controle se deve concatenar automaticamente informações complementares
      * na descrição do produto, como por exemplo, informações sobre impostos.
@@ -1872,9 +1872,16 @@ class Danfe extends DaCommon
 
                     return $texto;
                 } else {
+                	$textoIndPag = "";
                     $pag = $this->dom->getElementsByTagName("pag");
+                    $indPag = $this->getTagValue($pag->item(0), "indPag");
+					if ($indPag === "0") {
+						$textoIndPag = "Pagamento à Vista - ";
+					} elseif ($indPag === "1") {
+						$textoIndPag = "Pagamento à Prazo - ";
+					}
                     if ($tPag = $this->getTagValue($pag->item(0), "tPag")) {
-                        return $this->tipoPag($tPag);
+                        return $textoIndPag . $this->tipoPag($tPag);
                     }
                 }
             }
@@ -1892,10 +1899,14 @@ class Danfe extends DaCommon
     protected function sizeExtraTextoFatura()
     {
         $textoFatura = $this->getTextoFatura();
-        //verificar se existem duplicatas
-        if ($this->dup->length == 0 && $textoFatura !== "") {
-            return 10;
-        }
+        if ($textoFatura !== "") {
+			//verificar se existem duplicatas
+			if ($this->dup->length == 0) {
+				return 2;
+			} else {
+				return 5;
+			}
+		}
 
         return 0;
     }
@@ -2324,10 +2335,10 @@ class Danfe extends DaCommon
             : '0';
         switch ($tipoFrete) {
             case 0:
-                $texto = "0-Por conta do Rem";
+                $texto = "0-Por conta do Remetente";
                 break;
             case 1:
-                $texto = "1-Por conta do Dest";
+                $texto = "1-Por conta do Destinatário";
                 break;
             case 2:
                 $texto = "2-Por conta de Terceiros";
@@ -2574,7 +2585,7 @@ class Danfe extends DaCommon
         $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         $this->pdf->textBox($x, $y, $w3, $h, $texto, $aFont, 'T', 'L', 1, '');
         if (is_numeric($pesoBruto) && $pesoBruto > 0) {
-            $texto = number_format($pesoBruto, 3, ",", ".");
+            $texto = number_format($pesoBruto, 2, ",", ".");
         } else {
             $texto = '';
         }
@@ -2587,7 +2598,7 @@ class Danfe extends DaCommon
         $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
         if (is_numeric($pesoLiquido) && $pesoLiquido > 0) {
-            $texto = number_format($pesoLiquido, 3, ",", ".");
+            $texto = number_format($pesoLiquido, 2, ",", ".");
         } else {
             $texto = '';
         }
