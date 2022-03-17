@@ -1885,7 +1885,7 @@ class Danfe extends DaCommon
                     }
 					$xPag = $this->getTagValue($pag->item(0), "xPag");
 					if ($xPag != "") {
-						$textoIndPag .= " (" . $xPag . ")";
+						$textoIndPag = $xPag;
 					}
 					return $textoIndPag;
                 }
