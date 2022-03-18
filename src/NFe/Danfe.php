@@ -1881,11 +1881,13 @@ class Danfe extends DaCommon
 						$textoIndPag = "Pagamento à Prazo - ";
 					}
                     if ($tPag = $this->getTagValue($pag->item(0), "tPag")) {
-                    	$textoIndPag .=  $this->tipoPag($tPag);
+                    	if ($tPag != "99") {
+                    		$textoIndPag .=  $this->tipoPag($tPag);
+						}
                     }
 					$xPag = $this->getTagValue($pag->item(0), "xPag");
 					if ($xPag != "") {
-						$textoIndPag = $xPag;
+						$textoIndPag .= $xPag;
 					}
 					return $textoIndPag;
                 }
