@@ -1041,6 +1041,7 @@ class Danfe extends DaCommon
             $CEP    = $this->formatField($CEP, "#####-###");
             $mun    = $this->getTagValue($this->enderEmit, "xMun");
             $UF     = $this->getTagValue($this->enderEmit, "UF");
+            $fone   = $this->formatField($fone, strlen($fone) == 10 ? '(##) ####-####' : '(##) #####-####');
             $texto  = $lgr . ", " . $nro . $cpl . "\n" . $bairro . " - "
                 . $CEP . "\n" . $mun . " - " . $UF . " "
                 . "Fone: " . $fone;
