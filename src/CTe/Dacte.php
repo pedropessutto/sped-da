@@ -2881,7 +2881,7 @@ class Dacte extends DaCommon
         }
         $textoObs = explode("Motorista:", $texto);
         $textoObs[1] = isset($textoObs[1]) ? "Motorista: " . $textoObs[1] : '';
-        $texto .= $this->getTagValue($this->imp, "infAdFisco", "\r\n");
+        $textoObs[0] .= $this->getTagValue($this->imp, "infAdFisco", "\r\n");
         $aFont = array(
             'font' => $this->fontePadrao,
             'size' => 7.5,
