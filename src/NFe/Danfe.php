@@ -2692,12 +2692,12 @@ class Danfe extends DaCommon
             $i      = 0;
             while ($i < $rastro->length) {
                 $dFab = $this->getTagDate($rastro->item($i), 'dFab');
-                $datafab = " Fab: " . $dFab;
+                $datafab = ", Fab: " . $dFab;
                 $dVal = $this->getTagDate($rastro->item($i), 'dVal');
-                $dataval = " Val: " . $dVal;
+                $dataval = ", Val: " . $dVal;
 
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'nLote', ' Lote: ');
-                $loteTxt .= $this->getTagValue($rastro->item($i), 'qLote', ' Quant: ');
+                $loteTxt .= ', Quant: ' . number_format($this->getTagValue($rastro->item($i), 'qLote'),0,',','.');
                 $loteTxt .= $datafab; //$this->getTagDate($rastro->item($i), 'dFab', ' Fab: ');
                 $loteTxt .= $dataval; //$this->getTagDate($rastro->item($i), 'dVal', ' Val: ');
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'vPMC', ' PMC: ');
