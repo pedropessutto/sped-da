@@ -356,7 +356,7 @@ class Danfe extends DaCommon
                 $this->textoAdic .= ". \n";
             }
             $this->textoAdic .= ! empty($this->getTagValue($this->infAdic, "infCpl"))
-                ? 'Inf. Contribuinte: ' . $this->anfaveaDANFE($this->getTagValue($this->infAdic, "infCpl"))
+                ? $this->anfaveaDANFE($this->getTagValue($this->infAdic, "infCpl"))
                 : '';
             $infPedido       = $this->geraInformacoesDaTagCompra();
             if ($infPedido != "") {
