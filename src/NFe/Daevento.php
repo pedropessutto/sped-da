@@ -396,13 +396,13 @@ class Daevento extends DaCommon
         $x = $oldX;
         $y = $y1;
         if ($this->CNPJDest != '') {
-            $texto = 'CNPJ do Destinatário: ' . $this->formatField($this->CNPJDest, "##.###.###/####-##");
+            $texto2 = 'CNPJ do Destinatário: ' . $this->formatField($this->CNPJDest, "##.###.###/####-##");
         }
         if ($this->CPFDest != '') {
-            $texto = 'CPF do Destinatário: ' . $this->formatField($this->CPFDest, "###.###.###-##");
+            $texto2 = 'CPF do Destinatário: ' . $this->formatField($this->CPFDest, "###.###.###-##");
         }
         $aFont = ['font' => $this->fontePadrao,'size' => 12,'style' => 'B'];
-        $this->pdf->textBox($x + 2, $y + 13, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pdf->textBox($x + 2, $y + 13, $w2, 8, $texto2, $aFont, 'T', 'L', 0, '');
         $numNF = substr($this->chNFe, 25, 9);
         $serie = substr($this->chNFe, 22, 3);
         $numNF = $this->formatField($numNF, "###.###.###");
