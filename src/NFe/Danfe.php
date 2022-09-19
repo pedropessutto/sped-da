@@ -1177,7 +1177,7 @@ class Danfe extends DaCommon
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
         $texto = $this->ide->getElementsByTagName("natOp")->item(0)->nodeValue;
         $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
-        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'B', 'C', 0, '');
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'B', 'L', 0, '');
         $x += $w;
         $w = $w3;
         //PROTOCOLO DE AUTORIZAÇÃO DE USO ou DADOS da NF-E
@@ -1230,7 +1230,7 @@ class Danfe extends DaCommon
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
         $texto = $this->getTagValue($this->emit, "IE");
         $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
-        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'B', 'C', 0, '');
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'B', 'L', 0, '');
         //INSCRIÇÃO MUNICIPAL
         $x     += $w;
         $texto = 'INSCRIÇÃO MUNICIPAL';
