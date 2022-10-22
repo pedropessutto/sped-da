@@ -1876,19 +1876,23 @@ class Danfe extends DaCommon
                 	$textoIndPag = "";
                     $pag = $this->dom->getElementsByTagName("pag");
                     $indPag = $this->getTagValue($pag->item(0), "indPag");
-					if ($indPag === "0") {
-						$textoIndPag = "Pagamento à Vista - ";
-					} elseif ($indPag === "1") {
-						$textoIndPag = "Pagamento à Prazo - ";
-					}
-                    if ($tPag = $this->getTagValue($pag->item(0), "tPag")) {
-                    	if ($tPag != "99") {
-                    		$textoIndPag .=  $this->tipoPag($tPag);
-						}
-                    }
+					$tPag = $this->getTagValue($pag->item(0), "tPag");
 					$xPag = $this->getTagValue($pag->item(0), "xPag");
-					if ($xPag != "") {
-						$textoIndPag .= $xPag;
+					if ($xPag != "FUNRURAL") {
+						if ($indPag === "0") {
+							$textoIndPag = "Pagamento à Vista - ";
+						} elseif ($indPag === "1") {
+							$textoIndPag = "Pagamento à Prazo - ";
+						}
+						if ($tPag) {
+							if ($tPag != "99") {
+								$textoIndPag .=  $this->tipoPag($tPag);
+							}
+						}
+						if ($xPag != "") {
+							if ($textoIndPag != "") $textoIndPag .= " | ";
+							$textoIndPag .= $xPag;
+						}
 					}
 					return $textoIndPag;
                 }
