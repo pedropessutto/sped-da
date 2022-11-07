@@ -27,26 +27,30 @@ trait TraitBlocoIX
             '',
             true
         );
+
         if ($this->paperwidth < 70) {
             $fsize = 5;
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => ''];
-        }
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => 'B'];
+        } else {
+			$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+		}
+
         $this->pdf->textBox(
             $this->margem,
-            $y+3,
+            $y+5,
             $this->wPrint,
             $this->bloco9H-4,
             str_replace(";", "\n", $this->infCpl),
             $aFont,
             'T',
-            'L',
-            false,
+            'C',
+            null,
             '',
             false
         );
         return $this->bloco9H + $y;
     }
-    
+
     /**
      * Calcula a altura do bloco IX
      * Depende do conteudo de infCpl
@@ -69,6 +73,6 @@ trait TraitBlocoIX
         $linhas = str_replace(';', "\n", $this->infCpl);
         $hfont = (imagefontheight($fsize)/72)*13;
         $numlinhas = $pdf->getNumLines($linhas, $wprint, $aFont)+2;
-        return (int) ($numlinhas * $hfont) + 2;
+        return (int) ($numlinhas * $hfont) + 4;
     }
 }
