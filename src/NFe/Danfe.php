@@ -1957,15 +1957,15 @@ class Danfe extends DaCommon
             $dups    = "";
             $dupcont = 0;
             $nFat    = $this->dup->length;
-            if ($nFat > 7) {
+            if ($nFat > 14) {
                 $myH = 6;
                 $myW = $this->wPrint;
                 if ($this->orientacao == 'L') {
                     $myW -= $this->wCanhoto;
                 }
                 $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => ''];
-                $texto = "Existem mais de 7 duplicatas registradas, portanto não "
-                    . "serão exibidas, confira diretamente pelo XML.";
+                $texto = "Existem ".$nFat." duplicatas registrada. "
+                    . "Não é possível exibir todas, confira pelo XML.";
                 $this->pdf->textBox($x, $y, $myW, $myH, $texto, $aFont, 'C', 'C', 1, '');
 
                 return ($y + $h - 3);
