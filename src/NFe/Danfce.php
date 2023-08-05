@@ -48,6 +48,7 @@ class Danfce extends DaCommon
     protected $tpEmis;
     protected $tpAmb;
     protected $pag;
+    protected $card;
     protected $vTroco;
     protected $itens = [];
     protected $dest;
@@ -403,6 +404,7 @@ class Danfce extends DaCommon
         //senão, busca pelas tags de pagamento principal
         if ($this->infNFe->getAttribute("versao") == "4.00") {
             $this->pag = $this->dom->getElementsByTagName("detPag");
+            $this->card = $this->dom->getElementsByTagName("card");
             $tagPag = $this->dom->getElementsByTagName("pag")->item(0);
             $this->vTroco = $this->getTagValue($tagPag, "vTroco");
         } else {

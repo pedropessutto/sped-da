@@ -16,11 +16,19 @@ trait TraitBlocoV
         $arpgto = [];
         if ($this->pag->length > 0) {
             foreach ($this->pag as $pgto) {
+
+                if ($this->card->length > 0){
+                    $cAut = $this->getTagValue($this->card[0], 'cAut');
+                    $tBand = $this->tBand($this->getTagValue($this->card[0], 'tBand'));
+                }
+
                 $tipo = $this->pagType((int) $this->getTagValue($pgto, 'tPag'));
                 $valor = number_format((float) $this->getTagValue($pgto, 'vPag'), 2, ',', '.');
                 $arpgto[] = [
                     'tipo' => $tipo,
-                    'valor' => $valor
+                    'valor' => $valor,
+                    'caut' => $cAut ?? '',
+                    'tband' => $tBand ?? ''
                 ];
             }
         } else {
@@ -28,7 +36,9 @@ trait TraitBlocoV
             $valor = number_format((float) $this->getTagValue($pgto, 'vPag'), 2, ',', '.');
             $arpgto[] = [
                 'tipo' => $tipo,
-                'valor' => $valor
+                'valor' => $valor,
+                'caut' => '',
+                'tband' => ''
             ];
         }
         $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
@@ -54,6 +64,23 @@ trait TraitBlocoV
                 false
             );
             $z += $y2;
+            if ($p['tband'] != '') {
+                $this->pdf->textBox($this->margem, $z, $this->wPrint, 3, $p['tband'], $aFont, 'T', 'L', false, '', false);
+                $y3 = $this->pdf->textBox(
+                    $this->margem,
+                    $z,
+                    $this->wPrint,
+                    3,
+                    $p['caut'],
+                    $aFont,
+                    'T',
+                    'R',
+                    false,
+                    '',
+                    false
+                );
+                $z += $y3;
+            }
         }
 
         if ($this->vTroco) {
@@ -86,6 +113,41 @@ trait TraitBlocoV
             19 => 'Programa de fidelidade, Cashback, Crédito Virtual',
             90 => 'Sem pagamento',
             99 => 'Outros',
+        ];
+        return $lista[$type];
+    }
+
+    protected function tBand($type)
+    {
+        $lista = [
+            '10' => 'Alelo',
+            '03' => 'American Express',
+            '08' => 'Aura',
+            '11' => 'Banes Card',
+            '09' => 'Cabal',
+            '12' => 'CalCard',
+            '13' => 'Credz',
+            '05' => 'Diners Club',
+            '14' => 'Discover',
+            '06' => 'Elo',
+            '15' => 'GoodCard',
+            '16' => 'GreenCard',
+            '17' => 'Hiper',
+            '07' => 'Hipercard',
+            '18' => 'JcB',
+            '02' => 'Mastercard',
+            '19' => 'Mais',
+            '20' => 'MaxVan',
+            '21' => 'Policard',
+            '22' => 'RedeCompras',
+            '23' => 'Sodexo',
+            '04' => 'Sorocred',
+            '24' => 'ValeCard',
+            '25' => 'Verocheque',
+            '01' => 'Visa',
+            '26' => 'VR',
+            '27' => 'Ticket',
+            '99' => 'Outros'
         ];
         return $lista[$type];
     }
