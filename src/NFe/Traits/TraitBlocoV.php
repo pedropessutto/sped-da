@@ -149,7 +149,7 @@ trait TraitBlocoV
             '27' => 'Ticket',
             '99' => 'Outros'
         ];
-        return $lista[$type];
+        return $lista[$type] ?? null;
     }
 
     protected function calculateHeightPag()
