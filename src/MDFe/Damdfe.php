@@ -1237,8 +1237,7 @@ class Damdfe extends DaCommon
             $h = 45;
         }
         $this->pdf->textBox($x, $y, $x2, $h);
-        $texto = 'Observação
-        ' . $this->infCpl;
+        $texto = str_replace(";","\n",$this->infCpl);
         $aFont = array('font' => $this->fontePadrao, 'size' => 8, 'style' => '');
         $this->pdf->textBox($x, $y, $x2, 8, $texto, $aFont, 'T', 'L', 0, '', false);
         //$y = $this->hPrint - 4;
