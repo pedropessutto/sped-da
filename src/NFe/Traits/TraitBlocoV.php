@@ -51,11 +51,10 @@ trait TraitBlocoV
 
 		$z = $y + $y1;
 		foreach ($arpgto as $p) {
-			if ($p['tPag'] == '03' || $p['tPag'] == '04') {
+			if (in_array($p['tPag'], ['03','04','17','10','11','12'])) {
 				$texto = $p['tipo']
-					. (($p['tPag'] == '03' || $p['tPag'] == '04')
-						? ($p['tband'] != '' ? " - " . $p['tband'] : '')
-						. ($p['caut'] != '' ? " - " . $p['caut'] : '') : '');
+					. (($p['tband'] != '' ? " - " . $p['tband'] : '')
+						. ($p['caut'] != '' ? " - " . $p['caut'] : ''));
 			}
 			else
 				$texto = $p['tipo'];
