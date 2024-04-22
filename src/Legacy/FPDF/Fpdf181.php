@@ -239,31 +239,31 @@ class FPDF
     public function setTitle($title, $isUTF8 = false)
     {
         // Title of document
-        $this->metadata['Title'] = $isUTF8 ? $title : utf8_encode($title);
+        $this->metadata['Title'] = $isUTF8 ? $title : mb_convert_encoding($title, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
     }
 
     public function setAuthor($author, $isUTF8 = false)
     {
         // Author of document
-        $this->metadata['Author'] = $isUTF8 ? $author : utf8_encode($author);
+        $this->metadata['Author'] = $isUTF8 ? $author : mb_convert_encoding($author, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
     }
 
     public function setSubject($subject, $isUTF8 = false)
     {
         // Subject of document
-        $this->metadata['Subject'] = $isUTF8 ? $subject : utf8_encode($subject);
+        $this->metadata['Subject'] = $isUTF8 ? $subject : mb_convert_encoding($subject, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
     }
 
     public function setKeywords($keywords, $isUTF8 = false)
     {
         // Keywords of document
-        $this->metadata['Keywords'] = $isUTF8 ? $keywords : utf8_encode($keywords);
+        $this->metadata['Keywords'] = $isUTF8 ? $keywords : mb_convert_encoding($keywords, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
     }
 
     public function setCreator($creator, $isUTF8 = false)
     {
         // Creator of document
-        $this->metadata['Creator'] = $isUTF8 ? $creator : utf8_encode($creator);
+        $this->metadata['Creator'] = $isUTF8 ? $creator : mb_convert_encoding($creator, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
     }
 
     public function aliasNbPages($alias = '{nb}')
@@ -1309,7 +1309,7 @@ class FPDF
             return $param . '="' . $value . '"';
         }
         if (!$isUTF8) {
-            $value = utf8_encode($value);
+            $value = mb_convert_encoding($value, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
         }
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
             return $param . '="' . rawurlencode($value) . '"';
