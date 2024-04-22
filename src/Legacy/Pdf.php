@@ -11,10 +11,11 @@ class Pdf extends Fpdf
     private $aSet="";                                          // grupo A do conjunto de de caracteres legiveis
     private $bSet="";                                          // grupo B do conjunto de caracteres legiveis
     private $cSet="";                                          // grupo C do conjunto de caracteres legiveis
-    private $setFrom;                                          // converter de
-    private $setTo;                                            // converter para
-    private $jStart = ["A"=>103, "B"=>104, "C"=>105];     // Caracteres de seleção do grupo 128
-    private $jSwap = ["A"=>101, "B"=>100, "C"=>99];       // Caracteres de troca de grupo
+    private $setFrom = ["A" => 0, "B" => 0, "C" => 0];         // converter de
+    private $setTo = ["A" => 0, "B" => 0, "C" => 0];           // converter para
+    private $jStart = ["A"=> 103, "B"=> 104, "C" => 105];      // Caracteres de seleção do grupo 128
+    private $jSwap = ["A" => 101, "B" => 100, "C" => 99];      // Caracteres de troca de grupo
+    private $angle = 0;
 
     public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4')
     {
@@ -195,7 +196,7 @@ class Pdf extends Fpdf
                 for ($i=0; $i < $made; $i += 2) {
                     $crypt .= chr(strval(substr($code, $i, 2)));
                 }
-                    $jeu = "C";
+                $jeu = "C";
             } else {
                 $madeA = strpos($Aguid, "N");
                 if ($madeA === false) {
@@ -805,6 +806,7 @@ class Pdf extends Fpdf
     */
     public function dashedVLine($x, $y, $w, $yfinal, $n)
     {
+        $this->setDrawColor(150, 150, 150);
         $this->setLineWidth($w);
         if ($y > $yfinal) {
             $aux = $yfinal;
@@ -858,6 +860,8 @@ class Pdf extends Fpdf
      * se falso mantem o tamanho do fonte e usa quantas linhas forem necessárias
      * @param  number  $hmax
      * @param  number  $vOffSet incremento forçado na na posição Y
+     * @param  boolean $fill  Cria um quadrado e preenche o mesmo com a cor determinada no PDF.
+     * Se ativo junto com $border colore o quadrado criado pelo memso.
      * @return number $height Qual a altura necessária para desenhar esta textBox
      */
     public function textBox(
@@ -873,7 +877,8 @@ class Pdf extends Fpdf
         $link = '',
         $force = true,
         $hmax = 0,
-        $vOffSet = 0
+        $vOffSet = 0,
+        $fill = false
     ) {
         $oldY = $y;
         $temObs = false;
@@ -888,15 +893,19 @@ class Pdf extends Fpdf
             //remover espaços desnecessários
             $text = trim($text);
             //converter o charset para o fpdf
-            $text = utf8_decode($text);
+            $text = $this->convertToIso($text);
             //decodifica os caracteres html no xml
             $text = html_entity_decode($text);
         } else {
             $text = (string) $text;
         }
         //desenhar a borda da caixa
-        if ($border) {
-            $this->roundedRect($x, $y, $w, $h, 0, '1234', 'D');
+        if ($border && $fill) {
+            $this->roundedRect($x, $y, $w, $h, 0.8, '1234', 'DF');
+        } elseif ($border) {
+            $this->roundedRect($x, $y, $w, $h, 0.8, '1234', 'D');
+        } elseif ($fill) {
+            $this->rect($x, $y, $w, $h, 'F');
         }
         //estabelecer o fonte
         $this->setFont($aFont['font'], $aFont['style'], $aFont['size']);
@@ -1025,7 +1034,7 @@ class Pdf extends Fpdf
             //remover espaços desnecessários
             $text = trim($text);
             //converter o charset para o fpdf
-            $text = utf8_decode($text);
+            $text = $this->convertToIso($text);
             //decodifica os caracteres html no xml
             $text = html_entity_decode($text);
         } else {
@@ -1107,5 +1116,16 @@ class Pdf extends Fpdf
         //Zerando rotação
         $this->rotate(0, $x, $y);
         return ($y1 - $y) - $incY;
+    }
+
+    /**
+     * Converte os caracteres para ISO-88591.
+     *
+     * @param string $text
+     * @return string
+     */
+    private function convertToIso($text)
+    {
+        return mb_convert_encoding($text, 'ISO-8859-1', ['UTF-8', 'windows-1252']);
     }
 }
