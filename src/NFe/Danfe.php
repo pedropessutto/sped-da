@@ -3571,11 +3571,12 @@ class Danfe extends DaCommon
             $aDemi = explode('T', $dEmi);
             $dEmi  = $aDemi[0];
         }
+		$texto .= $this->dest->getElementsByTagName("xNome")->item(0)->nodeValue;
+		$texto .= " - ";
+		$texto .= "Emissão: ";
         $texto .= $this->ymdTodmy($dEmi) . " ";
-        $texto .= " - R$ ";
+        $texto .= " - Valor: R$ ";
         $texto .= number_format($this->ICMSTot->getElementsByTagName("vNF")->item(0)->nodeValue, 2, ",", ".") . " ";
-        $texto .= " - ";
-        $texto .= $destinatario;
         if ($this->orientacao == 'P') {
             $this->pdf->textBox($x, $y, $w - 1, $h, $texto, $aFont, 'C', 'L', 0, '', false);
             $x1    = $x + $w;
