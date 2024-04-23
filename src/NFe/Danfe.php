@@ -3561,13 +3561,8 @@ class Danfe extends DaCommon
         $serie = str_pad($this->ide->getElementsByTagName('serie')->item(0)->nodeValue, 3, "0", STR_PAD_LEFT);
         $texto = "RECEBEMOS DE ";
         $texto .= $emitente;
-        $texto .= " OS PRODUTOS E/OU SERVIÇOS CONSTANTES DA NOTA FISCAL ELETRÔNICA INDICADA ";
-        if ($this->orientacao == 'P') {
-            $texto .= "ABAIXO";
-        } else {
-            $texto .= "AO LADO";
-        }
-        $texto .= ". EMISSÃO: ";
+        $texto .= " OS PRODUTOS E/OU SERVIÇOS CONSTANTES DA NOTA FISCAL ELETRÔNICA";
+        $texto .= ". \n";
         $dEmi  = ! empty($this->ide->getElementsByTagName("dEmi")->item(0)->nodeValue) ?
             $this->ide->getElementsByTagName("dEmi")->item(0)->nodeValue : '';
         if ($dEmi == '') {
@@ -3577,9 +3572,9 @@ class Danfe extends DaCommon
             $dEmi  = $aDemi[0];
         }
         $texto .= $this->ymdTodmy($dEmi) . " ";
-        $texto .= "VALOR TOTAL: R$ ";
+        $texto .= " - R$ ";
         $texto .= number_format($this->ICMSTot->getElementsByTagName("vNF")->item(0)->nodeValue, 2, ",", ".") . " ";
-        $texto .= "DESTINATÁRIO: ";
+        $texto .= " - ";
         $texto .= $destinatario;
         if ($this->orientacao == 'P') {
             $this->pdf->textBox($x, $y, $w - 1, $h, $texto, $aFont, 'C', 'L', 0, '', false);
