@@ -3561,7 +3561,7 @@ class Danfe extends DaCommon
         $serie = str_pad($this->ide->getElementsByTagName('serie')->item(0)->nodeValue, 3, "0", STR_PAD_LEFT);
         $texto = "RECEBEMOS DE ";
         $texto .= $emitente;
-        $texto .= " OS PRODUTOS E/OU SERVIÇOS CONSTANTES DA NOTA FISCAL ELETRÔNICA";
+        $texto .= " OS PRODUTOS E/OU SERVIÇOS CONSTANTES DA NOTA FISCAL ELETRÔNICA INDICADA AO LADO";
         $texto .= ". \n";
         $dEmi  = ! empty($this->ide->getElementsByTagName("dEmi")->item(0)->nodeValue) ?
             $this->ide->getElementsByTagName("dEmi")->item(0)->nodeValue : '';
@@ -3571,6 +3571,7 @@ class Danfe extends DaCommon
             $aDemi = explode('T', $dEmi);
             $dEmi  = $aDemi[0];
         }
+        $texto .= "Destinatário: ";
 		$texto .= $this->dest->getElementsByTagName("xNome")->item(0)->nodeValue;
 		$texto .= " - ";
 		$texto .= "Emissão: ";
