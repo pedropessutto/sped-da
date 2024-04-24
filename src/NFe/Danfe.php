@@ -2700,6 +2700,7 @@ class Danfe extends DaCommon
                 $dVal = $this->getTagDate($rastro->item($i), 'dVal');
                 $dataval = ", Val: " . $dVal;
 
+                $loteTxt .= "\n";
                 $loteTxt .= $this->getTagValue($rastro->item($i), 'nLote', ' Lote: ');
                 $loteTxt .= ', Quant: ' . number_format($this->getTagValue($rastro->item($i), 'qLote'),0,',','.');
                 $loteTxt .= $datafab; //$this->getTagDate($rastro->item($i), 'dFab', ' Fab: ');
