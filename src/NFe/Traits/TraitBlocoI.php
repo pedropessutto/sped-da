@@ -11,7 +11,7 @@ trait TraitBlocoI
     {
 		//$this->bloco1H = 18;
 		$y = $this->margem;
-//$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+//$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
 //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco1H, '', $aFont, 'T', 'C', true, '', false);
 		$emitRazao = $this->getTagValue($this->emit, "xNome");
 		$emitCnpj = $this->getTagValue($this->emit, "CNPJ");
@@ -56,7 +56,7 @@ trait TraitBlocoI
             $alignH = 'C';
         }
         //COLOCA RAZÃO SOCIAL
-        $aFont = ['font'=>$this->fontePadrao, 'size' => 8, 'style' => ''];
+        $aFont = ['font'=>$this->fontePadrao, 'size' => 8, 'style' => $this->fontStyle];
         $texto = "{$emitRazao}";
         $y += $this->pdf->textBox(
             $xRs+2,
@@ -72,7 +72,7 @@ trait TraitBlocoI
             true
         );
         if ($this->pdf->fontSizePt < 8) {
-            $aFont = ['font'=>$this->fontePadrao, 'size' => $this->pdf->fontSizePt, 'style' => ''];
+            $aFont = ['font'=>$this->fontePadrao, 'size' => $this->pdf->fontSizePt, 'style' => $this->fontStyle];
         }
 		$texto = "CNPJ: {$emitCnpj} IE: {$emitIE}";
 		$y += $this->pdf->textBox($xRs+2, $y, $wRs-2, 3, $texto, $aFont, 'T', $alignH, false, '', true);

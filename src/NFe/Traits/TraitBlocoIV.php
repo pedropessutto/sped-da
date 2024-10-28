@@ -11,7 +11,7 @@ trait TraitBlocoIV
     {
         //$this->bloco4H = 13;
 
-        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco4H, '', $aFont, 'T', 'C', true, '', false);
 
         $qtd = $this->det->length;
@@ -20,7 +20,7 @@ trait TraitBlocoIV
         $frete = $this->getTagValue($this->ICMSTot, 'vFrete');
         $bruto = $valor + $desconto - $frete;
 
-        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
+        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => $this->fontStyle];
         $texto = "Qtde total de itens";
         $this->pdf->textBox(
             $this->margem,

@@ -10,10 +10,10 @@ trait TraitBlocoVI
     protected function blocoVI($y)
     {
         //$this->bloco6H = 10;
-        
-        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+
+        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco6H, '', $aFont, 'T', 'C', false, '', false);
-        
+
         $texto = "Consulte pela Chave de Acesso em:";
         $aFont = ['font'=> $this->fontePadrao, 'size' => 8, 'style' => 'B'];
         $y1 = $this->pdf->textBox(
@@ -29,9 +29,9 @@ trait TraitBlocoVI
             '',
             false
         );
-        
+
         $texto =  $this->urlChave;
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         $y2 = $this->pdf->textBox(
             $this->margem,
             $y+$y1,
@@ -45,10 +45,10 @@ trait TraitBlocoVI
             '',
             false
         );
-        
+
         $chave =  str_replace('NFe', '', $this->infNFe->getAttribute("Id"));
         $texto = $this->formatField($chave, $this->formatoChave);
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         $y3 = $this->pdf->textBox(
             $this->margem,
             $y+$y1+$y2+1,

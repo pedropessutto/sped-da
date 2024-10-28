@@ -10,11 +10,11 @@ trait TraitBlocoII
     protected function blocoII($y)
     {
         //$this->bloco2H = 12;
-        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco2H, '', $aFont, 'T', 'C', true, '', false);
         if ($this->tpEmis == 9) {
             $texto = "Documento Auxiliar da Nota Fiscal de Consumidor Eletronica";
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
             $y1 = $this->pdf->textBox(
                 $this->margem,
                 $y,
@@ -29,7 +29,7 @@ trait TraitBlocoII
                 true
             );
             $texto = "Não permite aproveitamento de crédito de ICMS";
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
             $y1 += $this->pdf->textBox(
                 $this->margem,
                 $y+$y1,
@@ -59,7 +59,7 @@ trait TraitBlocoII
                 '',
                 true
             );
-            
+
             $texto = "Pendente de autorização";
             $aFont = ['font'=> $this->fontePadrao, 'size' => 8, 'style' => 'I'];
             $this->pdf->textBox(
@@ -78,7 +78,7 @@ trait TraitBlocoII
         } else {
             $texto = "Documento Auxiliar da Nota Fiscal de Consumidor Eletronica\n"
                 . "Não permite aproveitamento de crédito de ICMS";
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
             $y1 = $this->pdf->textBox(
                 $this->margem,
                 $this->bloco1H-2,

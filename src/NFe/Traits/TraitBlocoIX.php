@@ -9,11 +9,11 @@ trait TraitBlocoIX
 {
     protected function blocoIX($y)
     {
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         $valor = $this->getTagValue($this->ICMSTot, 'vTotTrib');
         $trib = !empty($valor) ? number_format((float) $valor, 2, ',', '.') : '-----';
         $texto = "Tributos totais Incidentes (Lei Federal 12.741/2012): R$ {$trib}";
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         $this->pdf->textBox(
             $this->margem,
             $y,
@@ -65,10 +65,10 @@ trait TraitBlocoIX
         $orientacao = 'P';
         $pdf = new \NFePHP\DA\Legacy\Pdf($orientacao, 'mm', $papel);
         $fsize = 7;
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         if ($this->paperwidth < 70) {
             $fsize = 5;
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => $this->fontStyle];
         }
         $linhas = str_replace(';', "\n", $this->infCpl);
         $hfont = (imagefontheight($fsize)/72)*13;

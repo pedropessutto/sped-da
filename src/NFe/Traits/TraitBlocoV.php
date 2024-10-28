@@ -11,7 +11,7 @@ trait TraitBlocoV
 	{
 		$this->bloco5H = $this->calculateHeightPag();
 
-		$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+		$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
 //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco5H, '', $aFont, 'T', 'C', true, '', false);
 		$arpgto = [];
 		if ($this->pag->length > 0) {
@@ -43,7 +43,7 @@ trait TraitBlocoV
 				'tband' => ''
 			];
 		}
-		$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+		$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
 		$texto = "FORMA PAGAMENTO";
 		$this->pdf->textBox($this->margem, $y, $this->wPrint, 4, $texto, $aFont, 'T', 'L', false, '', false);
 		$texto = "VALOR PAGO R$";

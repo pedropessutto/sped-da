@@ -62,6 +62,7 @@ class Danfce extends DaCommon
     protected $hLinha = 3;
     protected $aFontTit = ['font' => 'times', 'size' => 9, 'style' => 'B'];
     protected $aFontTex = ['font' => 'times', 'size' => 8, 'style' => ''];
+    protected $fontStyle = '';
     protected $via = "Via Consumidor";
     protected $offline_double = true;
     protected $canceled = false;
@@ -146,6 +147,20 @@ class Danfce extends DaCommon
         } else {
             $this->fontePadrao = $font;
         }
+    }
+
+    /**
+     * Seta o estilo da fonte a ser utilizada
+     *
+     * @param string $font
+     */
+    public function setFontStyle($style = '')
+    {
+        if (!in_array($style, ['', 'B', 'I'])) {
+            $style = '';
+        }
+
+        $this->fontStyle = $style;
     }
 
     /**
