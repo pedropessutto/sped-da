@@ -15,7 +15,7 @@ trait TraitBlocoIII
         $matrix = [0.12, $this->descPercent, 0.08, 0.09, 0.156, 0.156];
         //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco3H, '', $aFont, 'T', 'C', true, '', false);
-        $fsize = 7;
+        $fsize = $this->fontStyle == 'B' ? 6.5 : 7;
         if ($this->paperwidth < 70) {
             $fsize = 5;
         }
