@@ -2,7 +2,7 @@
 
 namespace NFePHP\DA\Legacy;
 
-use NFePHP\DA\Legacy\FPDF\Fpdf181 as Fpdf;
+use NFePHP\DA\Legacy\FPDF\Fpdf as Fpdf;
 
 class Pdf extends Fpdf
 {
