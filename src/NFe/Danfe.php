@@ -292,6 +292,10 @@ class Danfe extends DaCommon
      * @var bool
      */
     protected $obsshow = true;
+    /**
+     * @var bool
+     */
+    protected $exibirCanhoto = true;
 
     /**
      * __construct
@@ -336,6 +340,16 @@ class Danfe extends DaCommon
     public function setQComCasasDec($qComCasasDec)
     {
         $this->qComCasasDec = $qComCasasDec;
+    }
+
+    /**
+     * Define se deve ou não exibir o canhoto.
+     *
+     * @param bool $exibirCanhoto
+     */
+    public function setExibirCanhoto($exibirCanhoto)
+    {
+        $this->exibirCanhoto = $exibirCanhoto;
     }
 
     protected function calculoEspacoVericalDadosAdicionais()
@@ -619,12 +633,14 @@ class Danfe extends DaCommon
         $x = $this->margesq;
         $y = $this->margsup;
         //coloca o(s) canhoto(s) da NFe
-        if ($this->orientacao == 'P') {
-            $y = $this->canhoto($this->margesq, $this->margsup);
-        } else {
-            $this->canhoto($this->margesq, $this->margsup);
-            $x = 25;
-        }
+        if($this->exibirCanhoto) {
+			if ($this->orientacao == 'P') {
+				$y = $this->canhoto($this->margesq, $this->margsup);
+			} else {
+				$this->canhoto($this->margesq, $this->margsup);
+				$x = 25;
+			}
+		}
         //coloca o cabeçalho
         $y = $this->header($x, $y, $pag, $totPag);
         //coloca os dados do destinatário
