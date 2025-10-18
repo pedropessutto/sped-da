@@ -296,6 +296,10 @@ class Danfe extends DaCommon
      * @var bool
      */
     protected $exibirCanhoto = true;
+    /**
+     * @var string
+     */
+    protected $renasem = '';
 
     /**
      * __construct
@@ -350,6 +354,16 @@ class Danfe extends DaCommon
     public function setExibirCanhoto($exibirCanhoto)
     {
         $this->exibirCanhoto = $exibirCanhoto;
+    }
+
+    /**
+     * Define o RENASEM - exibe no cabeçalho da nota
+     *
+     * @param bool $exibirCanhoto
+     */
+    public function setRenasem($renasem)
+    {
+        $this->renasem = $renasem;
     }
 
     protected function calculoEspacoVericalDadosAdicionais()
@@ -1061,6 +1075,11 @@ class Danfe extends DaCommon
             $texto  = $lgr . ", " . $nro . $cpl . "\n" . $bairro . " - "
                 . $CEP . "\n" . $mun . " - " . $UF . " "
                 . "Fone: " . $fone;
+
+            if ($this->renasem != '') {
+                $texto	.= "\n" . 'RENASEM: '. $this->renasem;
+            }
+
             $this->pdf->textBox($x1, $y1, $tw, 8, $texto, $aFont, 'T', 'C', 0, '');
         }
 
