@@ -19,12 +19,11 @@ trait TraitBlocoVII
         $uf = $this->getTagValue($this->enderDest, "UF");
         $texto = '';
         $yPlus = 0;
+
         if (!empty($cnpj)) {
-            $texto = "CONSUMIDOR - CNPJ "
-                . $this->formatField($cnpj, "##.###.###/####-##") . " - " . $nome;
+            $texto = $nome . "\nCNPJ " . $this->formatField($cnpj, "##.###.###/####-##");
         } elseif (!empty($cpf)) {
-            $texto = "CONSUMIDOR - CPF "
-                . $this->formatField($cpf, "###.###.###-##") . " = " . $nome;
+            $texto = $nome . "\nCPF " . $this->formatField($cpf, "###.###.###-##");
         } else {
             $texto = 'CONSUMIDOR NÃO IDENTIFICADO';
             $yPlus = 1;
