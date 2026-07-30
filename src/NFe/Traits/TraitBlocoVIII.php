@@ -30,8 +30,8 @@ trait TraitBlocoVIII
             array(-2, -2, -2, -2)
         )->setBackgroundColor('white');
         $qrcode = $bobj->getPngData();
-        $wQr = 50;
-        $hQr = 50;
+        $wQr = 30;
+        $hQr = 30;
         $yQr = ($y);
         $xQr = ($w/2) - ($wQr/2);
         $pic = 'data://text/plain;base64,' . base64_encode($qrcode);

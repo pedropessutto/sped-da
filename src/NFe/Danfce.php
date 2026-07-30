@@ -50,6 +50,7 @@ class Danfce extends DaCommon
     protected $tpEmis;
     protected $tpAmb;
     protected $pag;
+    protected $card;
     protected $vTroco;
     protected $itens = [];
     protected $dest;
@@ -64,6 +65,7 @@ class Danfce extends DaCommon
     protected $hLinha = 3;
     protected $aFontTit = ['font' => 'times', 'size' => 9, 'style' => 'B'];
     protected $aFontTex = ['font' => 'times', 'size' => 8, 'style' => ''];
+    protected $fontStyle = '';
     protected $via = "Via Consumidor";
     protected $offline_double = true;
     protected $canceled = false;
@@ -78,7 +80,7 @@ class Danfce extends DaCommon
 
     protected $bloco6H = 10.0; //informação para consulta
     protected $bloco7H = 25.0; //informações do consumidor
-    protected $bloco8H = 50.0; //informações do consumidor
+    protected $bloco8H = 30.0; //informações do consumidor
     protected $bloco9H = 4.0; //informações sobre tributos
     protected $bloco10H = 5.0; //informações do integrador
 
@@ -148,6 +150,20 @@ class Danfce extends DaCommon
         } else {
             $this->fontePadrao = $font;
         }
+    }
+
+    /**
+     * Seta o estilo da fonte a ser utilizada
+     *
+     * @param string $font
+     */
+    public function setFontStyle($style = '')
+    {
+        if (!in_array($style, ['', 'B', 'I'])) {
+            $style = '';
+        }
+
+        $this->fontStyle = $style;
     }
 
     /**
@@ -417,6 +433,7 @@ class Danfce extends DaCommon
         //senão, busca pelas tags de pagamento principal
         if ($this->infNFe->getAttribute("versao") == "4.00") {
             $this->pag = $this->dom->getElementsByTagName("detPag");
+            $this->card = $this->dom->getElementsByTagName("card");
             $tagPag = $this->dom->getElementsByTagName("pag")->item(0);
             $this->vTroco = $this->getTagValue($tagPag, "vTroco");
         } else {

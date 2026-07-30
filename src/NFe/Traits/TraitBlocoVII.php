@@ -20,11 +20,9 @@ trait TraitBlocoVII
         $texto = '';
         $yPlus = 0;
         if (!empty($cnpj)) {
-            $texto = "CONSUMIDOR - CNPJ "
-                . $this->formatField($cnpj, "##.###.###/####-##") . " - " . $nome;
+            $texto = $nome . "\nCNPJ " . $this->formatField($cnpj, "##.###.###/####-##");
         } elseif (!empty($cpf)) {
-            $texto = "CONSUMIDOR - CPF "
-                . $this->formatField($cpf, "###.###.###-##") . " = " . $nome;
+            $texto = $nome . "\nCPF " . $this->formatField($cpf, "###.###.###-##");
         } else {
             $texto = 'CONSUMIDOR NÃO IDENTIFICADO';
             $yPlus = 1;
@@ -49,7 +47,7 @@ trait TraitBlocoVII
         }
 
         if ($this->tpEmis == 9) {
-            $aFont = ['font'=> $this->fontePadrao, 'size' => (7-$subSize), 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => (7-$subSize), 'style' => $this->fontStyle];
             $y += 2*$yPlus;
             $y1 = $this->pdf->textBox(
                 $this->margem,
@@ -142,7 +140,7 @@ trait TraitBlocoVII
                 );
             }
         } elseif ($this->tpEmis == 4) {
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
             $y1 = $this->pdf->textBox(
                 $this->margem,
                 $y+1,
@@ -161,7 +159,7 @@ trait TraitBlocoVII
             $serie = str_pad($this->getTagValue($this->ide, "serie"), 3, '0', STR_PAD_LEFT);
             $data = (new \DateTime($this->getTagValue($this->ide, "dhEmi")))->format('d/m/Y H:i:s');
             $texto = "NFCe n. {$num} Série {$serie} {$data}";
-            $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => $this->fontStyle];
             $y2 = $this->pdf->textBox(
                 $this->margem,
                 $y+1+$y1,
@@ -192,7 +190,7 @@ trait TraitBlocoVII
             );
 
             $texto = "Regularmente recebido pela administração tributária autorizadora";
-            $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => $this->fontStyle];
             $y2 = $this->pdf->textBox(
                 $this->margem,
                 $y+1+$y1+$y2+3,
@@ -210,7 +208,7 @@ trait TraitBlocoVII
                 $dhCont = $this->dom->getElementsByTagName('dhCont')->item(0)->nodeValue;
                 $dt = \DateTime::createFromFormat('Y-m-d\TH:i:sP', $dhCont);
                 $texto = "Data de entrada em contingência : " . $dt->format('d/m/Y H:i:s');
-                $aFont = ['font'=> $this->fontePadrao, 'size' => (7-$subSize), 'style' => ''];
+                $aFont = ['font'=> $this->fontePadrao, 'size' => (7-$subSize), 'style' => $this->fontStyle];
                 $y2 = $this->pdf->textBox(
                     $this->margem,
                     $y+1+$y1+$y2+6,
@@ -226,7 +224,7 @@ trait TraitBlocoVII
                 );
             }
         } else {
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
             $y1 = $this->pdf->textBox(
                 $this->margem,
                 $y+1,
@@ -274,7 +272,7 @@ trait TraitBlocoVII
     protected function blocoVIIProt($y, $subSize, $protocolo, $dhRecbto)
     {
         $texto = "Protocolo de Autorização:  {$protocolo}";
-        $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => $this->fontStyle];
         $y1 = $this->pdf->textBox(
             $this->margem,
             $y,
@@ -290,7 +288,7 @@ trait TraitBlocoVII
         );
 
         $texto = "Data de Autorização:  {$dhRecbto}";
-        $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => $this->fontStyle];
         return $this->pdf->textBox(
             $this->margem,
             $y+$y1,

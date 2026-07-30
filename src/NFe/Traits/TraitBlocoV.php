@@ -11,16 +11,26 @@ trait TraitBlocoV
     {
         $this->bloco5H = $this->calculateHeightPag();
 
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco5H, '', $aFont, 'T', 'C', true, '', false);
         $arpgto = [];
         if ($this->pag->length > 0) {
             foreach ($this->pag as $pgto) {
+
+                if ($this->card->length > 0){
+                    $cAut = $this->getTagValue($this->card[0], 'cAut');
+                    $tBand = $this->tBand($this->getTagValue($this->card[0], 'tBand')) ?? '';
+                    $tPag = $this->getTagValue($pgto, 'tPag') ?? '';
+                }
+
                 $tipo = $this->pagType((int) $this->getTagValue($pgto, 'tPag'));
                 $valor = number_format((float) $this->getTagValue($pgto, 'vPag'), 2, ',', '.');
                 $arpgto[] = [
                     'tipo' => $tipo,
-                    'valor' => $valor
+					'tPag' => $tPag ?? '',
+					'valor' => $valor,
+					'caut' => $cAut ?? '',
+					'tband' => $tBand ?? ''
                 ];
             }
         } else {
@@ -29,9 +39,11 @@ trait TraitBlocoV
             $arpgto[] = [
                 'tipo' => $tipo,
                 'valor' => $valor
+				'caut' => '',
+				'tband' => ''
             ];
         }
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         $texto = "FORMA PAGAMENTO";
         $this->pdf->textBox($this->margem, $y, $this->wPrint, 4, $texto, $aFont, 'T', 'L', false, '', false);
         $texto = "VALOR PAGO R$";
@@ -39,29 +51,37 @@ trait TraitBlocoV
 
         $z = $y + $y1;
         foreach ($arpgto as $p) {
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 6, 'style' => ''];
-            $this->pdf->textBox($this->margem, $z, $this->wPrint, 3, $p['tipo'], $aFont, 'T', 'L', false, '', false);
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
-            $y2 = $this->pdf->textBox(
-                $this->margem,
-                $z,
-                $this->wPrint,
-                3,
-                $p['valor'],
-                $aFont,
-                'T',
-                'R',
-                false,
-                '',
-                false
-            );
-            $z += $y2;
+            if (in_array($p['tPag'], ['03','04','17','10','11','12'])) {
+				$texto = $p['tipo']
+					. (($p['tband'] != '' ? " - " . $p['tband'] : '')
+						. ($p['caut'] != '' ? " - " . $p['caut'] : ''));
+			}
+			else
+				$texto = $p['tipo'];
+
+			$this->pdf->textBox($this->margem, $z, $this->wPrint, 3, $texto, $aFont, 'T', 'L', false, '', false);
+			$y2 = $this->pdf->textBox(
+				$this->margem,
+				$z,
+				$this->wPrint,
+				3,
+				$p['valor'],
+				$aFont,
+				'T',
+				'R',
+				false,
+				'',
+				false
+			);
+			$z += $y2;
         }
 
+        /* 
         $texto = "Troco R$";
         $this->pdf->textBox($this->margem, $z, $this->wPrint, 3, $texto, $aFont, 'T', 'L', false, '', false);
         $texto =  !empty($this->vTroco) ? number_format((float) $this->vTroco, 2, ',', '.') : '0,00';
         $y1 = $this->pdf->textBox($this->margem, $z, $this->wPrint, 3, $texto, $aFont, 'T', 'R', false, '', false);
+        */
 
         $this->pdf->dashedHLine($this->margem, $this->bloco5H+$y, $this->wPrint, 0.1, 30);
         return $this->bloco5H + $y;
@@ -91,8 +111,43 @@ trait TraitBlocoV
             91 => 'Pagamento Posterior',
             99 => 'Outros',
         ];
-        return mb_strtoupper($lista[$type]);
+        return $lista[$type] ?? null;
     }
+
+    protected function tBand($type)
+	{
+		$lista = [
+			'10' => 'Alelo',
+			'03' => 'American Express',
+			'08' => 'Aura',
+			'11' => 'Banes Card',
+			'09' => 'Cabal',
+			'12' => 'CalCard',
+			'13' => 'Credz',
+			'05' => 'Diners Club',
+			'14' => 'Discover',
+			'06' => 'Elo',
+			'15' => 'GoodCard',
+			'16' => 'GreenCard',
+			'17' => 'Hiper',
+			'07' => 'Hipercard',
+			'18' => 'JcB',
+			'02' => 'Mastercard',
+			'19' => 'Mais',
+			'20' => 'MaxVan',
+			'21' => 'Policard',
+			'22' => 'RedeCompras',
+			'23' => 'Sodexo',
+			'04' => 'Sorocred',
+			'24' => 'ValeCard',
+			'25' => 'Verocheque',
+			'01' => 'Visa',
+			'26' => 'VR',
+			'27' => 'Ticket',
+			'99' => 'Outros'
+		];
+		return $lista[$type] ?? null;
+	}
 
     protected function calculateHeightPag()
     {

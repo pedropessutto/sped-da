@@ -1431,7 +1431,8 @@ class Damdfe extends DaCommon
             $y = 180;
         }
         $this->pdf->textBox($x, $y, $x2, $h, '', $this->baseFont, 'T', 'L', 1);
-        $texto = "Observações\n{$this->infCpl}";
+        $texto = "Observações\n";
+        $texto .= str_replace(";", "\n", $this->infCpl);
         if (!empty($this->infAdFisco)) {
             $texto .= "\n{$this->infAdFisco}";
         }

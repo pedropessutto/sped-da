@@ -13,13 +13,13 @@ trait TraitBlocoIII
             return $y;
         }
         $matrix = [0.12, $this->descPercent, 0.08, 0.09, 0.156, 0.156];
-        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco3H, '', $aFont, 'T', 'C', true, '', false);
-        $fsize = 7;
+        $fsize = $this->fontStyle == 'B' ? 6.5 : 7;
         if ($this->paperwidth < 70) {
             $fsize = 5;
         }
-        $aFont = ['font'=> $this->fontePadrao, 'size' => $fsize, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => $fsize, 'style' => $this->fontStyle];
 
         $texto = "Código";
         $x = $this->margem;
@@ -145,7 +145,7 @@ trait TraitBlocoIII
             $fsize = 5;
         }
         $hfont = (imagefontheight($fsize)/72)*15;
-        $aFont = ['font'=> $this->fontePadrao, 'size' => $fsize, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => $fsize, 'style' => $this->fontStyle];
         $htot = 0;
         if ($this->det->length == 0) {
         } else {

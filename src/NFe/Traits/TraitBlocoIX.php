@@ -14,7 +14,7 @@ trait TraitBlocoIX
         $valor = $this->getTagValue($this->ICMSTot, 'vTotTrib');
         $trib = !empty($valor) ? number_format((float) $valor, 2, ',', '.') : '-----';
         $texto = "Tributos totais Incidentes (Lei Federal 12.741/2012): R$ {$trib}";
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         $this->pdf->textBox(
             $this->margem,
             $y,
@@ -28,10 +28,14 @@ trait TraitBlocoIX
             '',
             true
         );
+
         if ($this->paperwidth < 70) {
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => ''];
-        }
-        $y += 3;
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => 'B'];
+        } else {
+			$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+		}
+
+        $y += 5;
         $this->pdf->textBox(
             $this->margem,
             $y,
@@ -40,8 +44,8 @@ trait TraitBlocoIX
             str_replace(";", "\n", $this->infCpl . "\n" . $this->textoExtra),
             $aFont,
             'T',
-            'L',
-            false,
+            'C',
+            null,
             '',
             false
         );
@@ -61,10 +65,10 @@ trait TraitBlocoIX
         $orientacao = 'P';
         $pdf = new Pdf($orientacao, 'mm', $papel);
         $fsize = 7;
-        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => $this->fontStyle];
         if ($this->paperwidth < 70) {
             $fsize = 5;
-            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => ''];
+            $aFont = ['font'=> $this->fontePadrao, 'size' => 5, 'style' => $this->fontStyle];
         }
         $linhas = str_replace(';', "\n", $this->infCpl);
         $hfont = (imagefontheight($fsize)/72)*13;
@@ -74,6 +78,6 @@ trait TraitBlocoIX
             $hfont = (imagefontheight($fsize)/72)*13;
             $numlinhas += $pdf->getNumLines($linhas, $wprint, $aFont);
         }
-        return (int) ($numlinhas * $hfont) + 2;
+        return (int) ($numlinhas * $hfont) + 4;
     }
 }

@@ -123,7 +123,7 @@ class Daevento extends DaCommon
         $this->cOrgao = $this->infEvento->getElementsByTagName("cOrgao")->item(0)->nodeValue;
         $this->xCorrecao = $this->infEvento->getElementsByTagName("xCorrecao")->item(0);
         $this->xCorrecao = (empty($this->xCorrecao) ? '' : $this->xCorrecao->nodeValue);
-        $this->xCorrecao = str_replace(';', ";\n", $this->xCorrecao);
+        $this->xCorrecao = str_replace(';', "\n", $this->xCorrecao);
         $this->xCondUso = $this->infEvento->getElementsByTagName("xCondUso")->item(0);
         $this->xCondUso = (empty($this->xCondUso) ? '' : $this->xCondUso->nodeValue);
         $this->xJust = $this->infEvento->getElementsByTagName("xJust")->item(0);
@@ -392,10 +392,11 @@ class Daevento extends DaCommon
         // ############################################
         $x = $oldX;
         $y = $y1;
+        $texto = '';
         if ($this->CNPJDest != '') {
             $texto = 'CNPJ do Destinatário: ' . $this->formatField($this->CNPJDest, "##.###.###/####-##");
         }
-        if ($this->CPFDest != '') {
+        elseif ($this->CPFDest != '') {
             $texto = 'CPF do Destinatário: ' . $this->formatField($this->CPFDest, "###.###.###-##");
         }
         $aFont = ['font' => $this->fontePadrao,'size' => 12,'style' => 'B'];
