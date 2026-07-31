@@ -27,7 +27,7 @@ class Danfe extends DaCommon
      *
      * @var bool
      */
-    public $exibirPIS = false;
+    public $exibirPIS = true;
     /**
      * Parâmetro para exibir ou ocultar os valores do ICMS Interestadual e Valor Total dos Impostos.
      *
@@ -60,7 +60,7 @@ class Danfe extends DaCommon
      *
      * @var boolean
      */
-    public $descProdInfoComplemento = false;
+    public $descProdInfoComplemento = true;
     /**
      * Parâmetro do controle se deve exibir o email do destinatário
      * na informações complementares
@@ -73,7 +73,7 @@ class Danfe extends DaCommon
      *
      * @var boolean
      */
-    public $gerarInformacoesAutomaticas = false;
+    public $gerarInformacoesAutomaticas = true;
     /**
      * Parâmetro do controle se deve concatenar automaticamente informações sobre rastro e medicamento
      * na descrição do produto, como por exemplo, lote, validade, fabricacao, codigo ANVISA
@@ -331,7 +331,7 @@ class Danfe extends DaCommon
 
     protected $title = '';
 
-    protected bool $usarLinhaTracejadaSeparacaoItens = true;
+    protected bool $usarLinhaTracejadaSeparacaoItens = false;
 
     public function setTitle($title)
     {
@@ -387,6 +387,15 @@ class Danfe extends DaCommon
     public function setOcultarUnidadeTributavel($ocultarUnidadeTributavel = false)
     {
         $this->ocultarUnidadeTributavel = filter_var($ocultarUnidadeTributavel, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * Atribui se deve exibir o PIS/COFINS.
+     * @param bool $exibirPIS
+     */
+    public function setExibirPIS($exibirPIS = false)
+    {
+        $this->exibirPIS = filter_var($exibirPIS, FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -2856,6 +2865,8 @@ class Danfe extends DaCommon
                         $datafab = ", Fab: " . $dFab;
                         $dVal = $this->getTagDate($rastro->item($i), 'dVal');
                         $dataval = ", Val: " . $dVal;
+                       
+                        $loteTxt .= "\n";
                         $loteTxt .= $this->getTagValue($rastro->item($i), 'nLote', ' Lote: ');
                         $loteTxt .= ', Quant: ' . number_format($this->getTagValue($rastro->item($i), 'qLote'),0,',','.');
                         $loteTxt .= $datafab; //$this->getTagDate($rastro->item($i), 'dFab', ' Fab: ');
@@ -3988,12 +3999,12 @@ class Danfe extends DaCommon
         $texto .= $emitente;
         $texto .= " OS PRODUTOS E/OU SERVIÇOS CONSTANTES DA NOTA FISCAL ELETRÔNICA INDICADA AO LADO.";
         $texto .= "\n";
-        if ($this->orientacao === 'P') {
-            $texto .= "ABAIXO";
-        } else {
-            $texto .= "AO LADO";
-        }
-        $texto .= ". EMISSÃO: ";
+        // if ($this->orientacao === 'P') {
+        //     $texto .= "ABAIXO";
+        // } else {
+        //     $texto .= "AO LADO";
+        // }
+        // $texto .= ". EMISSÃO: ";
         $dEmi  = !empty($this->ide->getElementsByTagName("dEmi")->item(0)->nodeValue) ?
             $this->ide->getElementsByTagName("dEmi")->item(0)->nodeValue : '';
         if ($dEmi == '') {
@@ -4007,7 +4018,7 @@ class Danfe extends DaCommon
 		$texto .= " - ";
 		$texto .= "Emissão: ";
         $texto .= $this->ymdTodmy($dEmi) . " ";
-        $texto .= " -Valor: R$ ";
+        $texto .= " - Valor: R$ ";
         $texto .= number_format($this->ICMSTot->getElementsByTagName("vNF")->item(0)->nodeValue, 2, ",", ".") . " ";
         if ($this->orientacao === 'P') {
             $this->pdf->textBox($x, $y, $w - 1, $h, $texto, $aFont, 'C', 'L', 0, '', false);
@@ -4162,9 +4173,9 @@ class Danfe extends DaCommon
         if (0 === $nfRefs->length) {
             return $saida;
         }
-        if ($nfRefs->length > 10) {
-            return 'Existem mais de 10 NF/NFe/ECF/NFP/CTe referenciadas, não serão exibidas na DANFE.';
-        }
+        // if ($nfRefs->length > 10) {
+        //     return 'Existem mais de 10 NF/NFe/ECF/NFP/CTe referenciadas, não serão exibidas na DANFE.';
+        // }
         foreach ($nfRefs as $nfRef) {
             if (empty($nfRef)) {
                 continue;

@@ -1113,19 +1113,21 @@ class Dacte extends DaCommon
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $aFont = $this->formatNegrito;
-        $texto = $this->getTagValue($this->enderReme, "xLgr") . ', ';
+        $lgr = $this->getTagValue($this->enderReme, "xLgr");
+        $texto = $lgr != "" ? ($lgr . ', ') : '';
         $texto .= $this->getTagValue($this->enderReme, "nro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
-        $texto = ($this->getTagValue($this->enderReme, "xCpl") != "") ?
-            $this->getTagValue($this->enderReme, "xCpl") . ' - ' : '';
+        $xCpl = $this->getTagValue($this->enderReme, "xCpl");
+        $texto = $xCpl != "" ? ($xCpl . ' - ') : '';
         $texto .= $this->getTagValue($this->enderReme, "xBairro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
         $texto = 'MUNICÍPIO';
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = $this->getTagValue($this->enderReme, "xMun") . ' - ';
+        $xMun = $this->getTagValue($this->enderReme, "xMun");
+        $texto = $xMun != "" ? ($xMun . ' - ') : '';
         $texto .= $this->getTagValue($this->enderReme, "UF");
         $aFont = $this->formatNegrito;
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -1201,19 +1203,21 @@ class Dacte extends DaCommon
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $aFont = $this->formatNegrito;
-        $texto = $this->getTagValue($this->enderDest, "xLgr") . ', ';
+        $lgr = $this->getTagValue($this->enderDest, "xLgr");
+        $texto = $lgr != "" ? ($lgr . ', ') : '';
         $texto .= $this->getTagValue($this->enderDest, "nro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
-        $texto = $this->getTagValue($this->enderDest, "xCpl") != "" ?
-            $this->getTagValue($this->enderDest, "xCpl") . ' - ' : '';
+        $xCpl = $this->getTagValue($this->enderDest, "xCpl");
+        $texto = $xCpl != "" ? ($xCpl . ' - ') : '';
         $texto .= $this->getTagValue($this->enderDest, "xBairro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
         $texto = 'MUNICÍPIO';
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = $this->getTagValue($this->enderDest, "xMun") . ' - ';
+        $xMun = $this->getTagValue($this->enderDest, "xMun");
+        $texto = $xMun != "" ? ($xMun . ' - ') : '';
         $texto .= $this->getTagValue($this->enderDest, "UF");
         $aFont = $this->formatNegrito;
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -1288,19 +1292,21 @@ class Dacte extends DaCommon
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $aFont = $this->formatNegrito;
-        $texto = $this->getTagValue($this->enderExped, "xLgr") . ', ';
+        $lgr = $this->getTagValue($this->enderExped, "xLgr");
+        $texto = $lgr != "" ? ($lgr . ', ') : '';
         $texto .= $this->getTagValue($this->enderExped, "nro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
-        $texto = $this->getTagValue($this->enderExped, "xCpl") != "" ?
-        $this->getTagValue($this->enderExped, "xCpl") . ' - ' : '';
+        $xCpl = $this->getTagValue($this->enderExped, "xCpl");
+        $texto = $xCpl != "" ? ($xCpl . ' - ') : '';
         $texto .= $this->getTagValue($this->enderExped, "xBairro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
         $texto = 'MUNICÍPIO';
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = $this->getTagValue($this->enderExped, "xMun") . ' - ';
+        $xMun = $this->getTagValue($this->enderExped, "xMun");
+        $texto = $xMun != "" ? ($xMun . ' - ') : '';
         $texto .= $this->getTagValue($this->enderExped, "UF");
         $aFont = $this->formatNegrito;
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -1374,19 +1380,21 @@ class Dacte extends DaCommon
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $aFont = $this->formatNegrito;
-        $texto = $this->getTagValue($this->enderReceb, "xLgr") . ', ';
+        $lgr = $this->getTagValue($this->enderReceb, "xLgr");
+        $texto = $lgr != "" ? ($lgr . ', ') : '';
         $texto .= $this->getTagValue($this->enderReceb, "nro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
-        $texto = ($this->getTagValue($this->enderReceb, "xCpl") != "") ?
-            $this->getTagValue($this->enderReceb, "xCpl") . ' - ' : '';
+        $xCpl = $this->getTagValue($this->enderReceb, "xCpl");
+        $texto = $xCpl != "" ? ($xCpl . ' - ') : '';
         $texto .= $this->getTagValue($this->enderReceb, "xBairro");
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
         $texto = 'MUNICÍPIO';
         $aFont = $this->formatPadrao;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = $this->getTagValue($this->enderReceb, "xMun") . ' - ';
+        $xMun = $this->getTagValue($this->enderReceb, "xMun");
+        $texto = $xMun != "" ? ($xMun . ' - ') : '';
         $texto .= $this->getTagValue($this->enderReceb, "UF");
         $aFont = $this->formatNegrito;
         $this->pdf->textBox($x1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -2916,7 +2924,7 @@ class Dacte extends DaCommon
         }
         $textoObs = explode("Motorista:", $texto);
         $textoObs[1] = isset($textoObs[1]) ? "Motorista: " . $textoObs[1] : '';
-        $texto .= $this->getTagValue($this->imp, "infAdFisco", "\r\n");
+        $textoObs[0] .= $this->getTagValue($this->imp, "infAdFisco", "\r\n");
         $aFont = array(
             'font' => $this->fontePadrao,
             'size' => 7.5,

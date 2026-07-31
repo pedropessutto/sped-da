@@ -38,7 +38,7 @@ trait TraitBlocoV
             $valor = number_format((float) $this->getTagValue($this->pag, 'vPag'), 2, ',', '.');
             $arpgto[] = [
                 'tipo' => $tipo,
-                'valor' => $valor
+                'valor' => $valor,
 				'caut' => '',
 				'tband' => ''
             ];
