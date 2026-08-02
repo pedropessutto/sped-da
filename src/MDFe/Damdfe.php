@@ -860,25 +860,6 @@ class Damdfe extends DaCommon
             foreach ($this->infPercurso as $per) {
                 $percursos[] = $per->nodeValue;
             }
-            $percursos[] = 'RS';
-            $percursos[] = 'SC';
-            $percursos[] = 'PR';
-            $percursos[] = 'SP';
-            $percursos[] = 'MG';
-            $percursos[] = 'BA';
-            $percursos[] = 'CE';
-            $percursos[] = 'RN';
-            $percursos[] = 'PB';
-            $percursos[] = 'PE';
-            $percursos[] = 'AL';
-            $percursos[] = 'SE';
-            $percursos[] = 'BA';
-            $percursos[] = 'CE';
-            $percursos[] = 'RN';
-            $percursos[] = 'PB';
-            $percursos[] = 'PE';
-            $percursos[] = 'AL';
-            $percursos[] = 'SE';
             $aFont = array('font' => $this->fontePadrao, 'size' => 9, 'style' => '');
             $this->pdf->textBox($x1, $y + 0.5, $wp, 4, implode(', ', $percursos), $aFont, 'T', 'L', 0, '', false);
 
