@@ -2858,9 +2858,9 @@ class Danfe extends DaCommon
 
             if (!empty($prod->getElementsByTagName("rastro"))) {
                 $rastro = $prod->getElementsByTagName("rastro");
-                if ($rastro->length === 1) {
+                if ($rastro->length > 0) {
                     $i = 0;
-                    //while ($i < $rastro->length) {
+                    while ($i < $rastro->length) {
                         $dFab = $this->getTagDate($rastro->item($i), 'dFab');
                         $datafab = ", Fab: " . $dFab;
                         $dVal = $this->getTagDate($rastro->item($i), 'dVal');
@@ -2872,8 +2872,8 @@ class Danfe extends DaCommon
                         $loteTxt .= $datafab; //$this->getTagDate($rastro->item($i), 'dFab', ' Fab: ');
                         $loteTxt .= $dataval; //$this->getTagDate($rastro->item($i), 'dVal', ' Val: ');
                         $loteTxt .= $this->getTagValue($rastro->item($i), 'vPMC', ' PMC: ');
-                        //$i++;
-                    //}
+                        $i++;
+                    }
                 }
                 if ($loteTxt != '') {
                     $loteTxt .= ' ';
