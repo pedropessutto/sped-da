@@ -76,6 +76,7 @@ class Damdfe extends DaCommon
     protected $veicReboque;
     protected $valePed;
     protected $infCpl;
+    protected $seg;
     protected $infAdFisco;
     protected $dhRecbto;
     protected $condutor;
@@ -177,7 +178,7 @@ class Damdfe extends DaCommon
             if (!empty($this->rodo)) {
                 $this->RNTRC = "";
                 $infANTT = $this->rodo->getElementsByTagName("infANTT")->item(0);
-                if(isset($infANTT)){
+                if (isset($infANTT)) {
                     if (isset($infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue)) {
                         $this->RNTRC = $infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue;
                     }
@@ -192,6 +193,10 @@ class Damdfe extends DaCommon
             $this->valePed = "";
             if ($this->dom->getElementsByTagName("valePed")->item(0) != "") {
                 $this->valePed = $this->dom->getElementsByTagName("valePed")->item(0)->getElementsByTagName("disp");
+            }
+            $this->seg = "";
+            if ($this->dom->getElementsByTagName("seg")->item(0) != "") {
+                $this->seg = $this->dom->getElementsByTagName("seg");
             }
             $this->infCpl = ($infCpl = $this->dom->getElementsByTagName('infCpl')->item(0)) ? $infCpl->nodeValue : "";
             $this->infAdFisco = ($infAdFisco = $this->dom->getElementsByTagName('infAdFisco')->item(0)) ? $infAdFisco->nodeValue : "";
@@ -965,13 +970,14 @@ class Damdfe extends DaCommon
                 }
             }
             $x1 = $x;
+            $y = $altura;
             // $y += 10;
             if ($this->orientacao == 'P') {
                 $y += 22;
             }
             $yCabecalhoLinha = $y;
             $x2 = round($maxW / 2, 0);
-            $valesPedagios = 1;
+            $valesPedagios = 0;
             $temVales = false;
             if ($this->valePed != "" && $this->valePed->length > 0) {
                 $valesPedagios = $this->valePed->length;
@@ -1027,6 +1033,28 @@ class Damdfe extends DaCommon
             if (!$temVales) {
                 $altura += 4;
             }
+            if ($this->seg != "" && $this->seg->length > 0) {
+                $y += 10;
+                $x1 = $x;
+                $x2 = ($x2 / 3);
+                $this->pdf->textBox($x1, $y, $x2 + 6, 6 + ($tamanho / 2), '', $this->baseFont, 'T', 'L', 0);
+                $texto = 'Seguradora';
+                $aFont = array('font' => $this->fontePadrao, 'size' => 8, 'style' => 'B');
+                $this->pdf->textBox($x1, $y, $x2 + 6, 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                $y += 2;
+                $altura = $y;
+                for ($i = 0; $i < $this->seg->length; $i++) {
+                    $altura += 4;
+                    $xSeg = $this->seg->item($i)->getElementsByTagName('infSeg')->item(0)->getElementsByTagName('xSeg')->item(0)->nodeValue;
+                    $CNPJ = $this->seg->item($i)->getElementsByTagName('infSeg')->item(0)->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+                    $aFont = array('font' => $this->fontePadrao, 'size' => 9, 'style' => '');
+                    $this->pdf->textBox($x1, $altura, 95, 4, "{$CNPJ} {$xSeg}", $aFont, 'T', 'L', 0, '', false);
+
+                    $altura += 4;
+                    $texto = $this->seg->item($i)->getElementsByTagName('nApol')->item(0)->nodeValue;
+                    $this->pdf->textBox($x1, $altura, 95, 4, "Número da apólice: {$texto}", $aFont, 'T', 'L', 0, '', false);
+                }
+            }
             $this->condutor = $this->veicTracao->getElementsByTagName('condutor');
             $x1 = round($maxW / 2, 0) + 7;
             $y = $yold;
@@ -1066,15 +1094,14 @@ class Damdfe extends DaCommon
                 $aFont = array('font' => $this->fontePadrao, 'size' => 8, 'style' => 'B');
                 $this->pdf->textBox($x1, $y, $x2 - 1, 8, $texto, $aFont, 'T', 'L', 0, '', false);
             }
-            $y = $yCabecalhoLinha;
         }
+        $y += 10;
         $x1 = round($maxW / 2, 0) + 7;
         $x2 = ($maxW / 6);
-        $this->quantidadeChavesLayout = 21;
+        $this->quantidadeChavesLayout = 30 - $this->condutor->length;
         if ($this->orientacao == 'L') {
-            $x1 = 225;
-            $y = $yold - 5;
-            $this->quantidadeChavesLayout = 17;
+            $x1 = 149;
+            $this->quantidadeChavesLayout = 13 - $this->condutor->length;
         }
 
         if ($this->exibirDocumentosVinculados) {
@@ -1346,6 +1373,9 @@ class Damdfe extends DaCommon
 
     protected function addPage()
     {
+        if (empty($this->chaves)) {
+            return;
+        }
         $x = 3;
         $y = 7;
         // adiciona a primeira página
