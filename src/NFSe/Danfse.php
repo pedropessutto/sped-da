@@ -81,6 +81,8 @@ class Danfse extends DaCommon
     /** @var float */
     private $fieldRuleRight = self::X + self::WIDTH;
 
+    private $municipioUfFunction = null;
+
     public function __construct($xml)
     {
         $this->xml = $xml;
@@ -113,6 +115,11 @@ class Danfse extends DaCommon
     public function setPrintBackgrounds($flag = true)
     {
         $this->printBackgrounds = (bool) $flag;
+    }
+
+    public function setMunicipioUfFunction(callable $function)
+    {
+        $this->municipioUfFunction = $function;
     }
 
     public function creditsIntegratorFooter($message = '', $powered = true)
@@ -912,6 +919,17 @@ class Danfse extends DaCommon
     private function municipioUf(?DOMElement $end)
     {
         $base = $this->addressLocation($end);
+
+        $municipio_id = $this->value('cMun', $base);
+
+        if ($municipio_id && $this->municipioUfFunction) {
+            $municipioUf = call_user_func($this->municipioUfFunction, $municipio_id);
+           
+            if ($municipioUf) {
+                return $municipioUf;
+            }
+        }
+        
         return $this->dash($this->joinNonEmpty([
             $this->firstValue(['xMun', 'xCidade', 'cMun'], $base),
             $this->firstNonEmpty([$this->value('UF', $base), $this->ufIbge($this->value('cMun', $base))])
