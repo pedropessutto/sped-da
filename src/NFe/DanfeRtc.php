@@ -443,16 +443,39 @@ class DanfeRtc extends Danfe
         $this->pdf->textBox($x, $y + $hMiolo - $lh, $cols[0], $lh, $medida['rodape'], $aFont, 'B', 'L', 0, '');
 
         $xCst = $x + $cols[0];
-        $this->pdf->textBox($xCst, $y, $cols[1], $lh, $this->cstItem($det), $aFont, 'T', 'C', 0, '');
-        $this->pdf->textBox($xCst, $y + $lh, $cols[1], $lh, $this->getTagValue($prod, 'CFOP'), $aFont, 'T', 'C', 0, '');
+        foreach ($medida['ident'] as $i => $texto) {
+            $this->pdf->textBox($xCst, $y + ($i * $lh), $cols[1], $lh, $texto, $aFont, 'T', 'C', 0, '');
+        }
 
         $xQtd = $xCst + $cols[1];
         $un = $this->getTagValue($prod, 'uCom');
-        $this->pdf->textBox($xQtd, $y, $cols[2], $lh, $this->textoQuantidade($prod, 'qCom'), $aFont, 'T', 'C', 0, '');
+        $this->pdf->textBox(
+            $xQtd,
+            $y,
+            $cols[2],
+            $lh,
+            $this->textoCasas($prod, 'qCom'),
+            $aFont,
+            'T',
+            'C',
+            0,
+            ''
+        );
         $this->pdf->textBox($xQtd, $y + $lh, $cols[2], $lh, $un === '' ? '' : '[' . $un . ']', $aFont, 'T', 'C', 0, '');
 
         $xUnit = $xQtd + $cols[2];
-        $this->pdf->textBox($xUnit, $y, $cols[3], $lh, $this->textoNumero($prod, 'vUnCom'), $aFont, 'T', 'R', 0, '');
+        $this->pdf->textBox(
+            $xUnit,
+            $y,
+            $cols[3],
+            $lh,
+            $this->textoCasas($prod, 'vUnCom'),
+            $aFont,
+            'T',
+            'R',
+            0,
+            ''
+        );
         $xTotal = $xUnit + $cols[3];
         $this->pdf->textBox($xTotal, $y, $cols[4], $lh, $this->textoNumero($prod, 'vProd'), $aFont, 'T', 'R', 0, '');
 
@@ -461,18 +484,14 @@ class DanfeRtc extends Danfe
         $xValor = $xAliq + $cols[6];
         $colunas = [[$xBase, $cols[5]], [$xAliq, $cols[6]], [$xValor, $cols[7]]];
         foreach (array_values($medida['tributos']) as $c => $linhas) {
-            foreach ($linhas as $i => $texto) {
-                $this->pdf->textBox(
+            foreach ($linhas as $i => $celulas) {
+                $this->desenhaLinhaTributo(
                     $colunas[$c][0],
                     $y + ($i * $lh),
                     $colunas[$c][1],
                     $lh,
-                    $texto,
-                    $aFont,
-                    'T',
-                    'R',
-                    0,
-                    ''
+                    $celulas,
+                    $aFont
                 );
             }
         }
@@ -484,7 +503,7 @@ class DanfeRtc extends Danfe
      * Altura da faixa desenhada por faixaItem().
      *
      * @param \DOMElement $det
-     * @return array<string, mixed> h, hMiolo, lh, hNome, hInfo, nome, info, rodape e tributos
+     * @return array<string, mixed> h, hMiolo, lh, hNome, hInfo, nome, info, ident, rodape e tributos
      */
     protected function medidaFaixa($det)
     {
@@ -499,6 +518,12 @@ class DanfeRtc extends Danfe
         // vai no início da descrição, que quebra em linhas sem encolher a fonte.
         $nome = $codigo === '' ? $nome : $codigo . ' - ' . $nome;
         $info = $this->getTagValue($det, 'infAdProd');
+        $extra = $this->complementoItem($det, $prod);
+        if ($extra !== '') {
+            $info = trim($info) === '' ? $extra : rtrim($info) . "\n" . $extra;
+        }
+        $nome = $this->textoDescricao($nome);
+        $info = $this->textoDescricao($info);
         // O textBox sem $force avança uma linha por tamanho da fonte (fontSize, em mm): as alturas
         // saem da fonte usada, não de um valor fixo. A 1ª linha do nome ocupa a linha da grade ($lh).
         $nNome = max(1, (int) $this->pdf->getNumLines($nome, $wDesc, $aFont));
@@ -506,11 +531,13 @@ class DanfeRtc extends Danfe
         $nInfo = $info === '' ? 0 : max(1, (int) $this->pdf->getNumLines($info, $wDesc, $aFont));
         $hInfo = $nInfo * $this->pdf->fontSize;
         $tributos = $this->tributosItem($det);
+        $ident = $this->linhasIdentificacao($det);
         $hTexto = $hNome + $hInfo;
         $hNcm = $lh;
         // Só as linhas que existem no XML: item sem tributo fica com a altura da descrição.
         $hTax = max(2, count($tributos['bases']), count($tributos['aliquotas']), count($tributos['valores'])) * $lh;
-        $hMiolo = max($hTexto + $hNcm, $hTax);
+        $hIdent = count($ident) * $lh;
+        $hMiolo = max($hTexto + $hNcm, $hTax, $hIdent);
 
         return [
             'h' => round($hMiolo + 1.2, 2),
@@ -520,9 +547,74 @@ class DanfeRtc extends Danfe
             'hInfo' => $hInfo,
             'nome' => $nome,
             'info' => $info,
+            'ident' => $ident,
             'rodape' => $this->rodapeItem($det),
             'tributos' => $tributos,
         ];
+    }
+
+    /**
+     * Lote, ANVISA, FCI e veículo novo, com as mesmas flags da Danfe clássica.
+     * ANVISA segue o rastro (descProdInfoLoteTxt). Lote e FCI entram com descProdInfoComplemento.
+     *
+     * @param \DOMElement $det
+     * @param \DOMElement|null $prod
+     * @return string
+     */
+    protected function complementoItem($det, $prod)
+    {
+        if (empty($prod)) {
+            return '';
+        }
+        $anvisa = '';
+        $loteTxt = '';
+        if ($this->descProdInfoLoteTxt) {
+            $med = $prod->getElementsByTagName('med')->item(0);
+            $rastro = $prod->getElementsByTagName('rastro');
+            for ($i = 0; $i < $rastro->length; $i++) {
+                $loteTxt .= "\n";
+                $loteTxt .= $this->getTagValue($rastro->item($i), 'nLote', ' Lote: ');
+                $loteTxt .= ', Quant: ' . number_format(
+                    (float) $this->getTagValue($rastro->item($i), 'qLote'),
+                    0,
+                    ',',
+                    '.'
+                );
+                $loteTxt .= ', Fab: ' . $this->getTagDate($rastro->item($i), 'dFab');
+                $loteTxt .= ', Val: ' . $this->getTagDate($rastro->item($i), 'dVal');
+                $loteTxt .= $this->getTagValue($rastro->item($i), 'vPMC', ' PMC: ');
+            }
+            if ($loteTxt !== '') {
+                $loteTxt .= ' ';
+            }
+            $anvisa = $this->getTagValue($med, 'cProdANVISA', 'ANVISA: ');
+        }
+        $extra = $anvisa;
+        if ($this->descProdInfoComplemento) {
+            $nFCI = $this->getTagValue($det, 'nFCI');
+            $extra .= $loteTxt . ($nFCI === '' ? '' : ' FCI:' . $nFCI);
+        }
+        $veiculo = $this->itemVeiculoNovo($prod);
+        $extra = trim($extra);
+        if ($veiculo !== '') {
+            $extra = $extra === '' ? $veiculo : $extra . "\n" . $veiculo;
+        }
+
+        return $extra;
+    }
+
+    /**
+     * @param string $texto
+     * @return string
+     */
+    protected function textoDescricao($texto)
+    {
+        $texto = html_entity_decode((string) $texto);
+        if ($this->descProdQuebraLinha) {
+            $texto = str_replace(';', "\n", $texto);
+        }
+
+        return $texto;
     }
 
     /**
@@ -531,7 +623,9 @@ class DanfeRtc extends Danfe
      */
     protected function colunasItem($w)
     {
-        $partes = [0.27, 0.07, 0.08, 0.09, 0.09, 0.12, 0.14];
+        // As três colunas de tributo precisam de largura para o par do modelo:
+        // rótulo à esquerda, pontilhado e valor à direita, em cada metade.
+        $partes = [0.22, 0.07, 0.07, 0.08, 0.08, 0.13, 0.18];
         $cols = [];
         $usado = 0;
         foreach ($partes as $parte) {
@@ -551,7 +645,7 @@ class DanfeRtc extends Danfe
      * IBS MUN, IS). Monofasia (CST 620) vem de gIBSCBSMono, que não tem gIBSCBS.
      *
      * @param \DOMElement $det
-     * @return array{bases: string[], aliquotas: string[], valores: string[]}
+     * @return array{bases: array, aliquotas: array, valores: array}
      */
     protected function tributosItem($det)
     {
@@ -716,35 +810,141 @@ class DanfeRtc extends Danfe
     }
 
     /**
-     * "ROTULO valor", descartando o que não existe no XML: em pares quando o par cabe em $largura.
+     * Descarta o que não existe no XML. Cada linha é uma ou duas células [rótulo, valor]:
+     * a base ocupa a coluna inteira; alíquota e valor ficam em par quando o par cabe,
+     * no desenho do modelo (rótulo à esquerda, valor à direita).
      *
      * @param array<int, array{0: string, 1: string}> $itens
      * @param float $largura largura útil da coluna em mm; 0 = um por linha
-     * @return string[]
+     * @return array<int, array<int, array{0: string, 1: string}>>
      */
     protected function linhasRotuladas(array $itens, $largura = 0)
     {
-        $textos = [];
+        $celulas = [];
         foreach ($itens as $item) {
             if ($item[1] !== '') {
-                $textos[] = $item[0] . ' ' . $item[1];
+                $celulas[] = [$item[0], $item[1]];
             }
         }
         // Par que não cabe na coluna (ad rem, retenção, valores grandes) vai um por linha: o textBox
         // encolheria a fonte abaixo de 6 pt. A medida é a do texto na fonte do item, não a contagem de letras.
         $this->pdf->setFont($this->fontePadrao, '', 6);
         $linhas = [];
-        for ($i = 0; $i < count($textos); $i++) {
-            $par = $largura > 0 && isset($textos[$i + 1]) ? $textos[$i] . ' / ' . $textos[$i + 1] : '';
+        for ($i = 0; $i < count($celulas); $i++) {
+            $par = '';
+            if ($largura > 0 && isset($celulas[$i + 1])) {
+                $par = $celulas[$i][0] . ' ' . $celulas[$i][1]
+                    . ' / ' . $celulas[$i + 1][0] . ' ' . $celulas[$i + 1][1];
+            }
             if ($par !== '' && $this->pdf->getStringWidth($par) <= $largura) {
-                $linhas[] = $par;
+                $linhas[] = [$celulas[$i], $celulas[$i + 1]];
                 $i++;
                 continue;
             }
-            $linhas[] = $textos[$i];
+            $linhas[] = [$celulas[$i]];
         }
 
         return $linhas;
+    }
+
+    /**
+     * Uma linha da coluna de tributo: cada célula é uma caixa com o rótulo à esquerda,
+     * o valor à direita e pontilhado no intervalo, como no modelo da NT.
+     *
+     * @param float $x
+     * @param float $y
+     * @param float $w
+     * @param float $h
+     * @param array<int, array{0: string, 1: string}> $celulas
+     * @param array $aFont
+     * @return void
+     */
+    protected function desenhaLinhaTributo($x, $y, $w, $h, array $celulas, array $aFont)
+    {
+        $n = count($celulas);
+        if ($n === 0) {
+            return;
+        }
+        if ($n === 1) {
+            $this->desenhaCelulaTributo($x, $y, $w, $h, $celulas[0][0], $celulas[0][1], $aFont);
+            return;
+        }
+        $sep = 4.5;
+        $this->pdf->setFont($aFont['font'], isset($aFont['style']) ? $aFont['style'] : '', $aFont['size']);
+        $larguras = [];
+        $soma = 0.0;
+        foreach ($celulas as $celula) {
+            $largura = $this->pdf->getStringWidth($celula[0] . $celula[1]) + 1.6;
+            $larguras[] = $largura;
+            $soma += $largura;
+        }
+        $disponivel = $w - $sep * ($n - 1);
+        if ($soma > $disponivel && $soma > 0) {
+            $fator = $disponivel / $soma;
+            foreach ($larguras as $i => $largura) {
+                $larguras[$i] = $largura * $fator;
+            }
+            $extra = 0.0;
+        } else {
+            $extra = ($disponivel - $soma) / $n;
+        }
+        $cursor = $x;
+        foreach ($celulas as $i => $celula) {
+            $largura = $larguras[$i] + $extra;
+            $this->desenhaCelulaTributo($cursor, $y, $largura, $h, $celula[0], $celula[1], $aFont);
+            $cursor += $largura;
+            if ($i < $n - 1) {
+                $this->pdf->textBox($cursor, $y, $sep, $h, '/', $aFont, 'T', 'C', 0, '', false);
+                $cursor += $sep;
+            }
+        }
+    }
+
+    /**
+     * Rótulo à esquerda, valor à direita, pontilhado no vão.
+     * O valor encosta na borda direita da célula, então a linha sozinha e a
+     * metade direita de um par terminam no mesmo ponto. Rótulo, pontos e valor
+     * saem com text(), numa linha só: o textBox quebraria o ponto que não cabe
+     * e o "%" para a linha de baixo.
+     *
+     * @param float $x
+     * @param float $y
+     * @param float $w
+     * @param float $h
+     * @param string $rotulo
+     * @param string $valor
+     * @param array $aFont
+     * @return void
+     */
+    protected function desenhaCelulaTributo($x, $y, $w, $h, $rotulo, $valor, array $aFont)
+    {
+        $this->pdf->setFont($aFont['font'], isset($aFont['style']) ? $aFont['style'] : '', $aFont['size']);
+        $wRotulo = $this->pdf->getStringWidth($rotulo);
+        $wValor = $this->pdf->getStringWidth($valor);
+        // Mesma folga do textBox (respiro + alinhamento), para o número fechar
+        // junto dos demais valores alinhados à direita.
+        $esq = DanfeRtcPdf::RESPIRO_X + 0.5;
+        $dir = DanfeRtcPdf::RESPIRO_X + 0.5;
+        $xRotulo = $x + $esq;
+        $xValor = $x + $w - $dir - $wValor;
+        $baseline = $y + $this->pdf->fontSize;
+        $this->pdf->text($xRotulo, $baseline, $rotulo);
+        $this->pdf->text($xValor, $baseline, $valor);
+
+        $folga = 0.4;
+        $inicio = $xRotulo + $wRotulo + $folga;
+        $fim = $xValor - $folga;
+        $pontos = '';
+        while ($inicio + $this->pdf->getStringWidth($pontos . '.') <= $fim) {
+            $pontos .= '.';
+            if (strlen($pontos) > 60) {
+                break;
+            }
+        }
+        if ($pontos !== '') {
+            $sobra = $fim - $inicio - $this->pdf->getStringWidth($pontos);
+            $this->pdf->text($inicio + ($sobra / 2), $baseline, $pontos);
+        }
     }
 
     /**
@@ -754,12 +954,25 @@ class DanfeRtc extends Danfe
     protected function rodapeItem($det)
     {
         $prod = $det->getElementsByTagName('prod')->item(0);
+
+        // NCM
         $ncm = $prod ? $this->getTagValue($prod, 'NCM') : '';
-        $classe = $this->cClassTribItem($det);
+
+        // CST e cClassTrib do IBS/CBS
+        $imposto = $det->getElementsByTagName('imposto')->item(0);
+        $ibscbs = $this->primeiroFilho($imposto, 'IBSCBS');
+        $classe = $this->getTagValue($ibscbs, 'cClassTrib');
+        $cst = $this->getTagValue($ibscbs, 'CST');
+
         $partes = [];
         if ($ncm !== '') {
             $partes[] = '[NCM ' . $ncm . ']';
         }
+
+        if ($cst !== '') {
+            $partes[] = '[CST ' . $cst . ']';
+        }
+
         if ($classe !== '') {
             $partes[] = '[cClassTrib ' . $classe . ']';
         }
@@ -780,35 +993,72 @@ class DanfeRtc extends Danfe
     }
 
     /**
+     * Coluna CST/CFOP. O ICMS (orig/CST ou orig/CSOSN) sai mesmo sem base nem valor.
+     * O CST do IBS/CBS fica na linha de baixo, quando o grupo existe.
+     *
+     * @param \DOMElement $det
+     * @return string[]
+     */
+    protected function linhasIdentificacao($det)
+    {
+        $linhas = [];
+        $icms = $this->textoIcmsItem($det);
+        if ($icms !== '') {
+            $linhas[] = $icms;
+        }
+        // $ibscbs = $this->cstIBSCBSItem($det);
+        // if ($ibscbs !== '') {
+        //     $linhas[] = $ibscbs;
+        // }
+        $prod = $det->getElementsByTagName('prod')->item(0);
+        $cfop = $prod ? $this->getTagValue($prod, 'CFOP') : '';
+        if ($cfop !== '') {
+            $linhas[] = $cfop;
+        }
+
+        return $linhas;
+    }
+
+    /**
+     * orig/CST ou orig/CSOSN. O grupo ICMS existe mesmo quando não há vBC, pICMS nem vICMS.
+     *
      * @param \DOMElement $det
      * @return string
      */
-    protected function cstItem($det)
+    protected function textoIcmsItem($det)
     {
-        $ibscbs = $this->primeiroFilho($det->getElementsByTagName('imposto')->item(0), 'IBSCBS');
-        $cst = $this->getTagValue($ibscbs, 'CST');
-        if ($cst !== '') {
-            return $cst;
-        }
         $icms = $det->getElementsByTagName('ICMS')->item(0);
+        if (empty($icms)) {
+            return '';
+        }
+        $orig = $this->getTagValue($icms, 'orig');
         $cst = $this->getTagValue($icms, 'CST');
         if ($cst === '') {
             $cst = $this->getTagValue($icms, 'CSOSN');
         }
+        if ($orig === '') {
+            return $cst;
+        }
+        if ($cst === '') {
+            return $orig;
+        }
 
-        return $cst;
+        // return $orig . '/' . $cst;
+        return $orig . $cst;
     }
 
     /**
+     * CST do IBS/CBS. Vazio quando a nota não tem o grupo.
+     *
      * @param \DOMElement $det
      * @return string
      */
-    protected function cClassTribItem($det)
+    protected function cstIBSCBSItem($det)
     {
         $imposto = $det->getElementsByTagName('imposto')->item(0);
         $ibscbs = $this->primeiroFilho($imposto, 'IBSCBS');
 
-        return $this->getTagValue($ibscbs, 'cClassTrib');
+        return $this->getTagValue($ibscbs, 'CST');
     }
 
     /**
@@ -853,6 +1103,31 @@ class DanfeRtc extends Danfe
         }
 
         return number_format((float) $campo->nodeValue, 2, ',', '.');
+    }
+
+    /**
+     * Quantidade e valor unitário do item: 4 casas quando o valor precisa de mais de 2;
+     * caso contrário, 2 casas. Totais e tributos continuam em textoNumero(), sempre com 2.
+     *
+     * @param \DOMNode|null $node
+     * @param string $tag
+     * @return string
+     */
+    protected function textoCasas($node, $tag)
+    {
+        if (empty($node)) {
+            return '';
+        }
+        $direto = $this->primeiroFilho($node, $tag);
+        $campo = $direto ?: $node->getElementsByTagName($tag)->item(0);
+        if (empty($campo) || $campo->nodeValue === '') {
+            return '';
+        }
+
+        $quatro = number_format((float) $campo->nodeValue, 4, '.', '');
+        $casas = substr($quatro, -2) === '00' ? 2 : 4;
+
+        return number_format((float) $campo->nodeValue, $casas, ',', '.');
     }
 
     /**
